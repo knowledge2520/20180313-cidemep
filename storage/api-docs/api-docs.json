@@ -1,0 +1,440 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Pemedic API",
+        "version": "1.0.0"
+    },
+    "basePath": "/api",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/members/getLogout": {
+            "get": {
+                "tags": [
+                    "Authenticate"
+                ],
+                "summary": "",
+                "description": "",
+                "operationId": "api.members.getLogout",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "401": {
+                        "description": "unauthorized"
+                    },
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/members/postLogin": {
+            "post": {
+                "tags": [
+                    "Authenticate"
+                ],
+                "summary": "Login",
+                "description": "<ul>\n     *     <li>email : string (required)</li>\n     *     <li>password : string (required)</li></ul>",
+                "operationId": "api.members.postLogin",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Target customer.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "101": {
+                        "description": "Wrong email or password"
+                    },
+                    "102": {
+                        "description": "You need to confirm your account"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/members/postRegister": {
+            "post": {
+                "tags": [
+                    "Authenticate"
+                ],
+                "summary": "View",
+                "description": "<ul>\n     *     <li>email : string (required)</li>\n     *     <li>password : string (required)</li>\n     *     <li>name : string (required)</li></ul>",
+                "operationId": "api.v1.customers.postRegister",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Target customer.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Register"
+                        }
+                    }
+                ],
+                "responses": {
+                    "103": {
+                        "description": "The email has already been taken"
+                    },
+                    "104": {
+                        "description": "Send mail error"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/members/postForgotPassword": {
+            "post": {
+                "tags": [
+                    "Authenticate"
+                ],
+                "summary": "View",
+                "description": "<ul><li>email : string (required)</li></ul>",
+                "operationId": "api.v1customers.postForgotPassword",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Target customer.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ForgotPassword"
+                        }
+                    }
+                ],
+                "responses": {
+                    "104": {
+                        "description": "Send mail error"
+                    },
+                    "108": {
+                        "description": "We can't find a user with that e-mail address"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/members/postChangePassword": {
+            "post": {
+                "tags": [
+                    "Authenticate"
+                ],
+                "summary": "View",
+                "description": "<ul>\n     *     <li>currentPassword : string (required)</li>\n     *     <li>newPassword : string (required)</li></ul>",
+                "operationId": "api.members.members.postChangePassword",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Target customer.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ChangePassword"
+                        }
+                    }
+                ],
+                "responses": {
+                    "105": {
+                        "description": "Current password incorrect"
+                    },
+                    "106": {
+                        "description": "Account does not exist"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/medical/getListMedicalRecord": {
+            "get": {
+                "tags": [
+                    "MedicalRecord"
+                ],
+                "summary": "",
+                "description": "",
+                "operationId": "api.medical.getListMedicalRecord",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "401": {
+                        "description": "unauthorized"
+                    },
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/medical/add": {
+            "post": {
+                "tags": [
+                    "MedicalRecord"
+                ],
+                "summary": "View",
+                "description": "<ul>\n     *     <li>email : date (required)</li>\n     *     <li>clinic_name : string (required)</li>\n     *     <li>doctor_name : string (required)</li></ul>",
+                "operationId": "api.medical.add",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "date",
+                        "in": "formData",
+                        "description": "",
+                        "required": false,
+                        "type": "string",
+                        "default": ""
+                    },
+                    {
+                        "name": "doctor_name",
+                        "in": "formData",
+                        "description": "",
+                        "required": false,
+                        "type": "string",
+                        "default": ""
+                    },
+                    {
+                        "name": "clinic_name",
+                        "in": "formData",
+                        "description": "",
+                        "required": false,
+                        "type": "string",
+                        "default": ""
+                    },
+                    {
+                        "name": "file[]",
+                        "in": "formData",
+                        "description": "avatar's profile",
+                        "required": false,
+                        "type": "file"
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/message/getListMessages?take={take}&page={page}": {
+            "get": {
+                "tags": [
+                    "Message"
+                ],
+                "summary": "View",
+                "operationId": "api.v1.customers.getListMessages",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "take",
+                        "in": "path",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "default": "10"
+                    },
+                    {
+                        "name": "page",
+                        "in": "path",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "default": "1"
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "unauthorized"
+                    },
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "ChangePassword": {
+            "properties": {
+                "currentPassword": {
+                    "type": "string",
+                    "example": "admin@admin.com"
+                },
+                "newPassword": {
+                    "type": "string",
+                    "example": "admin@admin.com"
+                }
+            },
+            "type": "object",
+            "xml": {
+                "name": "ChangePassword"
+            }
+        },
+        "ForgotPassword": {
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "admin@admin.com"
+                }
+            },
+            "type": "object",
+            "xml": {
+                "name": "ForgotPassword"
+            }
+        },
+        "Login": {
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "admin@admin.com"
+                },
+                "password": {
+                    "type": "string",
+                    "format": "int64",
+                    "example": "123456"
+                }
+            },
+            "type": "object",
+            "xml": {
+                "name": "Login"
+            }
+        },
+        "AddNewMedicalRecord": {
+            "properties": {
+                "date": {
+                    "type": "string",
+                    "example": "2018-03-08"
+                },
+                "clinic_name": {
+                    "type": "string",
+                    "example": "Ph\u01b0\u1edbc An"
+                },
+                "doctor_name": {
+                    "type": "string",
+                    "example": "Ph\u01b0\u1edbc An"
+                }
+            },
+            "type": "object",
+            "xml": {
+                "name": "AddNewMedicalRecord"
+            }
+        },
+        "GetMessage": {
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "admin@admin.com"
+                },
+                "password": {
+                    "type": "string",
+                    "format": "int64",
+                    "example": "123456"
+                }
+            },
+            "type": "object",
+            "xml": {
+                "name": "Login"
+            }
+        },
+        "Register": {
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "test@test.com"
+                },
+                "full_name": {
+                    "type": "string",
+                    "example": "name"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "841207423094"
+                },
+                "address": {
+                    "type": "string",
+                    "example": "168/6 B\u00f9i Th\u1ecb Xu\u00e2n"
+                },
+                "gender": {
+                    "type": "string",
+                    "example": "Male"
+                },
+                "dob": {
+                    "type": "string",
+                    "example": "2018-03-07"
+                },
+                "height": {
+                    "type": "string",
+                    "example": "168"
+                },
+                "weight": {
+                    "type": "string",
+                    "example": "61"
+                }
+            },
+            "type": "object",
+            "xml": {
+                "name": "i"
+            }
+        }
+    },
+    "securityDefinitions": {
+        "api_key": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

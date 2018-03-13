@@ -1,0 +1,17 @@
+{
+    "name": "Pemedic",
+    "alias": "pemedic",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 1,
+    "providers": [
+        "Modules\\Pemedic\\Providers\\PemedicServiceProvider",
+        "Modules\\Pemedic\\Providers\\RouteServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        
+    ],
+    "requires": []
+}
