@@ -62,4 +62,90 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
         }
     }
     
+    /**
+        Author : NhatML
+        Todo : do something such generate the password
+        Param : - param1 
+                - param2
+        Return : explain data return
+    **/
+    public function pushDoctorCriteria(){
+        $model = $this->model->with('roles')->with('profile')->whereHas('roles',function($query){
+            $query->where('roles.id',4);
+        });
+        
+        $model->where('users.status', 1);
+        return $model;
+    }
+
+    /**
+        Author : NhatML
+        Todo : do something such generate the password
+        Param : - param1 
+                - param2
+        Return : explain data return
+    **/
+    public function getListDoctor($option = "list", $keyword = "", $page = false, $limit = false){
+        $offset = ($page - 1) * $limit;
+        if($option == "list"){
+            $result = [];
+            $data = false;
+            $query = "SELECT u.*
+                        FROM users u 
+                        JOIN pemedic__user_profiles p ON p.user_id = u.id 
+                        JOIN role_users ul ON ul.user_id = u.id AND ul.role_id = 4 ";
+            if($keyword){
+                $query.= " WHERE p.full_name LIKE '%$keyword%'";
+            }
+
+            $query.= "ORDER BY p.full_name ASC 
+                        LIMIT $limit
+                        OFFSET $offset";
+
+            $data = \DB::select($query);
+
+            if($data){
+                foreach ($data as $item) {
+                    $result[] = $this->model->find($item->id);
+                }
+            }
+
+        }else{
+            $result = $this->pushCriteria()
+                            ->whereHas('profile', function($query) use ($keyword){
+                                $query->where('full_name', 'LIKE', '%'.$keyword.'%');
+                            })
+                            ->count();
+        }
+        return $result;
+    }
+    
+    /**
+        Author : NhatML
+        Todo : do something such generate the password
+        Param : - param1 
+                - param2
+        Return : explain data return
+    **/
+    public function getAllDoctor($keyword = ""){
+        if($keyword){
+            return $this->pushDoctorCriteria()
+                        ->whereHas('profile', function($query) use ($keyword){
+                            $query->where('full_name', 'LIKE', '%'.$keyword.'%');
+                        })
+                        ->get();
+        }
+        return $this->pushDoctorCriteria()->get();
+    }
+
+    /**
+        Author : NhatML
+        Todo : do something such generate the password
+        Param : - param1 
+                - param2
+        Return : explain data return
+    **/
+    public function findDoctor($id){
+        return $this->pushDoctorCriteria()->find($id);
+    }
 }
