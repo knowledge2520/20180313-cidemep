@@ -4,7 +4,7 @@ namespace Modules\Pemedic\Entities;
 
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Auth\Authenticatable;
-use Cartalyst\Sentinel\Laravel\Facades\Activation;
+use Cartalyst\Sentinel\Laravel\Facades\Activation as MyActivation;
 use Cartalyst\Sentinel\Users\EloquentUser;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\User\Entities\UserInterface;
@@ -82,7 +82,7 @@ class User extends EloquentUser implements UserInterface, AuthenticatableContrac
      */
     public function isActivated()
     {
-        if (Activation::completed($this)) {
+        if (MyActivation::completed($this)) {
             return true;
         }
 
@@ -140,6 +140,10 @@ class User extends EloquentUser implements UserInterface, AuthenticatableContrac
     
     public function profile(){
         return $this->hasOne('Modules\Pemedic\Entities\UserProfile','user_id');
+    }
+
+    public function clinicProfile(){
+        return $this->hasOne('Modules\Pemedic\Entities\ClinicProfile','user_id');
     }
 
     public function clinic()

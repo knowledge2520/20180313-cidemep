@@ -6,7 +6,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Modules\Pemedic\Http\Controllers\Api\ApiBaseController;
-use Modules\Pemedic\Service\MessageService;
+use Modules\Pemedic\Services\MessageService;
 use Modules\Pemedic\Repositories\MessageRepository;
 use Modules\Pemedic\Repositories\UserRepository;
 use Modules\Pemedic\Http\Transformer\MessageTransformer;

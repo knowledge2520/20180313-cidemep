@@ -39,8 +39,10 @@ class ClinicService {
 
 
     /**
+     * create clinic function 
      * @param array $data
-     * @return null / clinic object
+     * @param $request
+     * @return null / user object
      */
     public function create($data = array(),$request)
     {
@@ -80,9 +82,6 @@ class ClinicService {
                 'issurance'      => $data['issurance'],
                 'image'          => $data['image'],
             ]);
-
-
-           
         }
 
         // when user is created from CMS, we inactivate account as default
@@ -91,8 +90,10 @@ class ClinicService {
     }
 
     /**
-     * @param ClinicProfile
+     * update clinic function 
+     * @param ClinicProfile $clinic
      * @param array $data
+     * @param $request
      * @return null / clinic object
      */
     public function update(ClinicProfile $clinic,$data = array(),$request)
@@ -109,8 +110,8 @@ class ClinicService {
     }
 
     /**
-     * @param array $data
-     * @return null / clinic object
+     * delete clinic function 
+     * @param clinic_id
      */
     public function deleteImage($clinic_id)
     {
@@ -119,6 +120,12 @@ class ClinicService {
         $clinic->save();
     }
 
+
+    /**
+     * upload file clinic function 
+     * @param $file
+     * @return file $url
+     */
     protected function uploadFile($file)
     {
         $s3 = \Storage::disk('local');

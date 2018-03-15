@@ -9,10 +9,15 @@ class CreateClinicRequest extends BaseFormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email|unique:users,email',
-            'clinic_name' => 'required',
-            'phone' => 'required',
-            'vip_phone' => 'required',
+            'email' => 'required|email|max:255|unique:users,email',
+            'clinic_name' => 'required|max:255',
+            'phone' => 'required|max:255',
+            'vip_phone' => 'required|max:255',
+            'address' => 'max:255',
+            'map' => 'max:255',
+            'word_time' => 'max:255',
+            'website' => 'max:255',
+            'issurance' => 'max:255',
         ];
     }
 

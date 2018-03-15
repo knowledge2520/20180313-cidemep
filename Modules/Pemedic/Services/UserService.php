@@ -38,42 +38,52 @@ class UserService {
     }
 
     /**
+     * create users function
      * @param array $data
-     * @return null / patient object
+     * @param $role
+     * @param $request
+     * @return null / users object
      */
     public function create($data = array(),$role,$request)
     {
         $password = $this->generatePassword();
         $data['password'] = Hash::make($password);
         $data['dob'] = !empty($data['dob'])?date('Y-m-d', strtotime($data['dob'])):null;
-
         $data['image'] = null;
         if(!empty($request->file('image')))
         {
             $file = $request->file('image');
             $data['image'] = $this->uploadFile($request->file('image'));
         }
-
-        $user = $this->userRepository->addNewUser($role,$data,0);
-        if(!empty($data['clinic_id']))
+        $oldUser =  $this->userRepository->findByAttributes(['email'=>$request->email]);
+        if(!empty($oldUser))
         {
-             // assign role
-            $user->clinic()->attach($data['clinic_id']);
+            $oldUser->roles()->attach($role);
         }
-        return $user;
-        // return $this->userRepository->addNewUser(config('asgard.userprofile.config.roles.patient'),$data,0);
+        else
+        {
+            $user = $this->userRepository->addNewUser($role,$data,0);
+            if(count($data['clinic_id'])>0)
+            {
+                 // assign clinic
+                $user->clinic()->attach($data['clinic_id']);
+            }
+            return $user;
+        }
     }
 
     /**
-     * @param userProfile
+     * update users function
+     * @param User $user
      * @param array $data
+     * @param request
      * @return null / user object
      */
     public function update(User $user,$data = array(),$request)
     {
         $data['dob'] = !empty($data['dob'])?date('Y-m-d', strtotime($data['dob'])):null;
         $this->userRepository->update($user,$data);
-        if(!empty($data['clinic_id']))
+        if(count($data['clinic_id'])>0)
         {
             $user->clinic()->detach();
             $user->clinic()->attach($data['clinic_id']);
@@ -87,8 +97,8 @@ class UserService {
     }
 
     /**
+     * export users to csv function
      * @param role_id
-     * @return null / user object
      */
     public function exportCsv($role_id)
     {   
@@ -100,6 +110,11 @@ class UserService {
         })->download('csv');
     }
 
+    /**
+     * random password function
+     * @param $length = 6
+     * @return string random
+     */
     protected function generatePassword($length = 6) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
         $charactersLength = strlen($characters);
@@ -111,8 +126,8 @@ class UserService {
     }
 
     /**
+     * delete image function
      * @param $user_id
-     * @return null / patient object
      */
     public function deleteImage($user_id)
     {
@@ -121,6 +136,28 @@ class UserService {
         $patient->save();
     }
 
+    /**
+     * bulk delete service
+     * @param $user_id
+     */
+    public function bulkDelete($user_id)
+    {
+        $users =  explode(',',$user_id);
+        foreach ($users as $id) {
+            $user = $this->userProfileRepository->find($id);
+            if($user)
+            {
+                $this->userProfileRepository->destroy($user);
+                $this->userRepository->destroy($user->user);
+            }
+        }  
+    }
+
+    /**
+     * upload file users function 
+     * @param $file
+     * @return file $url
+     */
     protected function uploadFile($file)
     {
         $s3 = \Storage::disk('local');

@@ -22,6 +22,7 @@ class UserProfile extends Model
         'image',
         'other_info',
         'is_receive_voucher',
+        'is_receive_news',
         'is_support',
         'status',
         'ordering',

@@ -42,9 +42,10 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
     }
 
     /**
+     * active user function
      * @param $user
-     * @description: create activation user record
-     */
+     * @param $status
+    */
     public function activateUser($user,$status) {
         $activationQuery = DB::table("activations")
             ->select('activations.code', 'activations.completed')
@@ -60,6 +61,31 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
         {
         	Activation::complete($user, $activation->code);
         }
+    }
+
+    /**
+     * check email user with role function
+     * @param $role_id
+     * @param $email
+     * @return true / false
+    */
+    public function validateEmail($role_id,$email) {
+        $user = $this->model->select('users.*')
+                ->where('email', $email)
+                ->first();
+        if(!empty($user))
+        {
+            $roles = DB::table("role_users")->select('role_users.*')
+                ->where('role_users.user_id', $user->id)
+                ->where('role_users.role_id', $role_id)
+                ->first();
+            if(!empty($roles))
+            {
+                return false;
+            }
+            return true;
+        }
+        return true;
     }
     
     /**

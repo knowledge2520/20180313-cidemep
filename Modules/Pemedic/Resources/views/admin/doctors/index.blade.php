@@ -42,13 +42,13 @@
                         <table class="data-table table table-bordered table-hover">
                             <thead>
                             <tr>
+                                <th></th>
                                 <th>{{ trans('pemedic::doctors.table.email') }}</th>
                                 <th>{{ trans('pemedic::doctors.table.name') }}</th>
                                 <th>{{ trans('pemedic::doctors.table.phone') }}</th>
                                 <th>{{ trans('pemedic::doctors.table.address') }}</th>
                                 <th>{{ trans('pemedic::doctors.table.gender') }}</th>
                                 <th>{{ trans('pemedic::doctors.table.type') }}</th>
-                                <th>{{ trans('pemedic::doctors.table.clinic') }}</th>
                                 <th>{{ trans('pemedic::doctors.table.image') }}</th>
                                 <th>{{ trans('pemedic::doctors.table.status') }}</th>
                                 <th data-sortable="false" style="min-width: 75px">{{ trans('core::core.table.actions') }}</th>
@@ -58,6 +58,7 @@
                             <?php if (isset($doctors)): ?>
                             <?php foreach ($doctors as $doctor): ?>
                             <tr>
+                                <td><input type="checkbox" name="doctor_id[]" value="{{ $doctor->id }}"></td>
                                 <td>
                                     <a href="{{ route('admin.doctor.doctor.edit', [$doctor->user_id]) }}">
                                         {{ $doctor->user->email }}
@@ -73,15 +74,6 @@
                                     @else
                                         {{ trans('pemedic::doctors.table.support') }}
                                     @endif
-                                </td>
-                                <td>
-                                    <?php 
-                                        $clinic_user =  $doctor->user->clinic()->first();
-                                        if(!empty($clinic_user))
-                                        {
-                                            echo $clinic_user->last_name;
-                                        }
-                                    ?>
                                 </td>
                                 <td>
                                     <center>
@@ -109,13 +101,13 @@
                             </tbody>
                             <tfoot>
                             <tr>
+                                <th></th>
                                 <th>{{ trans('pemedic::doctors.table.email') }}</th>
                                 <th>{{ trans('pemedic::doctors.table.name') }}</th>
                                 <th>{{ trans('pemedic::doctors.table.phone') }}</th>
                                 <th>{{ trans('pemedic::doctors.table.address') }}</th>
                                 <th>{{ trans('pemedic::doctors.table.gender') }}</th>
                                 <th>{{ trans('pemedic::doctors.table.type') }}</th>
-                                <th>{{ trans('pemedic::doctors.table.clinic') }}</th>
                                 <th>{{ trans('pemedic::doctors.table.image') }}</th>
                                 <th>{{ trans('pemedic::doctors.table.status') }}</th>
                                 <th data-sortable="false">{{ trans('core::core.table.actions') }}</th>
@@ -126,6 +118,12 @@
                     </div>
                 </div>
                 <!-- /.box -->
+                <div class="box-footer">
+                    {!! Form::open(['route' => ['admin.doctor.doctor.bulkdelete'], 'method' => 'post']) !!}
+                        <input type="hidden" id="doctor-hidden" name="users" value="">
+                        <button class="btn btn-danger pull-left btn-flat"> {{ trans('pemedic::patients.button.bulk delete') }}</button>
+                    {!! Form::close() !!}
+                </div>
             </div>
         </div>
     </div>
@@ -151,6 +149,17 @@
                 $clinic = $(this).val();
                 location.href = base_url + '/en/backend/pemedic/doctors' + $clinic;
             });
+
+            var array=[];
+            $("input[name^='doctor_id']").on("change",function(){
+                if($(this).prop('checked') ){
+                    array.push($(this).val() )
+                }else{
+                    array.splice( array.indexOf( $(this).val() ) , 1 ) ;
+                }
+
+                $("#doctor-hidden").val(array.join(","));
+            })
         });
     </script>
 

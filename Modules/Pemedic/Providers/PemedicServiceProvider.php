@@ -126,6 +126,32 @@ class PemedicServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            'Modules\Pemedic\Repositories\MedicalRecordFileRepository',
+            function () {
+                $repository = new \Modules\Pemedic\Repositories\Eloquent\EloquentMedicalRecordFileRepository(new \Modules\Pemedic\Entities\MedicalRecordFile());
+
+                if (! config('app.cache')) {
+                    return $repository;
+                }
+
+                return new \Modules\Pemedic\Repositories\Cache\CacheMedicalRecordFileDecorator($repository);
+            }
+        );
+
+        $this->app->bind(
+            'Modules\Pemedic\Repositories\NewRepository',
+            function () {
+                $repository = new \Modules\Pemedic\Repositories\Eloquent\EloquentNewRepository(new \Modules\Pemedic\Entities\News());
+
+                if (! config('app.cache')) {
+                    return $repository;
+                }
+
+                return new \Modules\Pemedic\Repositories\Cache\CacheNewDecorator($repository);
+            }
+        );
+
+        $this->app->bind(
             'Modules\Pemedic\Repositories\MessageRepository',
             function () {
                 $repository = new \Modules\Pemedic\Repositories\Eloquent\EloquentMessageRepository(new \Modules\Pemedic\Entities\Message());
@@ -138,6 +164,43 @@ class PemedicServiceProvider extends ServiceProvider
             }
         );
 
+        $this->app->bind(
+            'Modules\Pemedic\Repositories\NewsRepository',
+            function () {
+                $repository = new \Modules\Pemedic\Repositories\Eloquent\EloquentNewsRepository(new \Modules\Pemedic\Entities\News());
 
+                if (! config('app.cache')) {
+                    return $repository;
+                }
+
+                return new \Modules\Pemedic\Repositories\Cache\CacheNewsDecorator($repository);
+            }
+        );
+
+        $this->app->bind(
+            'Modules\Pemedic\Repositories\VoucherRepository',
+            function () {
+                $repository = new \Modules\Pemedic\Repositories\Eloquent\EloquentVoucherRepository(new \Modules\Pemedic\Entities\Voucher());
+
+                if (! config('app.cache')) {
+                    return $repository;
+                }
+
+                return new \Modules\Pemedic\Repositories\Cache\CacheVoucherDecorator($repository);
+            }
+        );
+
+        $this->app->bind(
+            'Modules\Pemedic\Repositories\VoucherPatientRepository',
+            function () {
+                $repository = new \Modules\Pemedic\Repositories\Eloquent\EloquentVoucherPatientRepository(new \Modules\Pemedic\Entities\VoucherPatient());
+
+                if (! config('app.cache')) {
+                    return $repository;
+                }
+
+                return new \Modules\Pemedic\Repositories\Cache\CacheVoucherPatientDecorator($repository);
+            }
+        );
     }
 }

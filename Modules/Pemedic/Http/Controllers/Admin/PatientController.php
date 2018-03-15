@@ -65,7 +65,7 @@ class PatientController extends AdminBaseController
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return create patient template
      */
     public function create(Request $request)
     {
@@ -76,22 +76,30 @@ class PatientController extends AdminBaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  CreatePemedicRequest $request
-     * @return Response
+     * @param  CreatePatientRequest $request
+     * @return index patient template
      */
     public function store(CreatePatientRequest $request)
     {
-        $this->userService->create($request->all(),config('asgard.userprofile.config.roles.patient'),$request);
-
-        return redirect()->route('admin.patient.patient.index')
-            ->withSuccess(trans('core::core.messages.resource created', ['name' => trans('pemedic::patients.title.patients')]));
+        $validate_email = $this->userRepository->validateEmail(config('asgard.userprofile.config.roles.patient'),$request->email);
+        if($validate_email)
+        {
+            $this->userService->create($request->all(),config('asgard.userprofile.config.roles.patient'),$request);
+            return redirect()->route('admin.patient.patient.index')
+                ->withSuccess(trans('core::core.messages.resource created', ['name' => trans('pemedic::patients.title.patients')]));
+        }
+        else
+        {
+            return redirect()->route('admin.patient.patient.create')
+                ->with(['email_error'=>"The email has already been taken."]);
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Pemedic $pemedic
-     * @return Response
+     * @param  User $patient
+     * @return edit patient template
      */
     public function edit(User $patient)
     {
@@ -102,9 +110,9 @@ class PatientController extends AdminBaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  Clinic $clinic
-     * @param  UpdateClinicRequest $request
-     * @return Response
+     * @param  User $patient
+     * @param  UpdatePatientRequest $request
+     * @return index patient template
      */
     public function update(User $patient, UpdatePatientRequest $request)
     {
@@ -117,7 +125,7 @@ class PatientController extends AdminBaseController
      * Remove the specified resource from storage.
      *
      * @param  User $patient
-     * @return Response
+     * @return index patient template
      */
     public function destroy(User $patient)
     {
@@ -129,7 +137,7 @@ class PatientController extends AdminBaseController
 
     /**
      *
-     * @return Response
+     *  export patient to csv
      */
     public function exportCsv()
     {
@@ -140,11 +148,24 @@ class PatientController extends AdminBaseController
      * Remove image when edit patient.
      *
      * @param  Request $request
-     * @return Response
      */
     public function deleteImage(Request $request)
     {
         $this->userService->deleteImage($request->patient_id);
+    }
+
+    /**
+     * bulk delete patient.
+     *
+     * @param  Request $request
+     * @return index patient index
+     */
+    public function bulkDelete(Request $request)
+    {
+        $this->userService->bulkDelete($request->users);
+
+        return redirect()->route('admin.patient.patient.index')
+            ->withSuccess(trans('core::core.messages.resource deleted', ['name' => trans('pemedic::patients.title.patients')]));
     }
     
 }

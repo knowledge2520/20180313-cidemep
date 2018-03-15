@@ -125,6 +125,11 @@ $router->group(['prefix' =>'/pemedic'], function (Router $router) {
         'uses' => 'PatientController@deleteImage',
         'middleware' => 'can:patient.patients.edit'
     ]);
+    $router->post('patients/bulk-delete', [
+        'as' => 'admin.patient.patient.bulkdelete',
+        'uses' => 'PatientController@bulkDelete',
+        'middleware' => 'can:patient.patients.destroy'
+    ]);
 
     // router doctor
     $router->bind('doctor', function ($id) {
@@ -170,4 +175,110 @@ $router->group(['prefix' =>'/pemedic'], function (Router $router) {
         'uses' => 'DoctorController@deleteImage',
         'middleware' => 'can:doctor.doctors.edit'
     ]);
+
+    $router->post('doctors/bulk-delete', [
+        'as' => 'admin.doctor.doctor.bulkdelete',
+        'uses' => 'DoctorController@bulkDelete',
+        'middleware' => 'can:doctor.doctors.destroy'
+    ]);
+
+    // router medical record
+    $router->bind('medical', function ($id) {
+        return app('Modules\Pemedic\Repositories\MedicalRecordRepository')->find($id);
+    });
+
+    $router->get('medicals', [
+        'as' => 'admin.medical.medical.index',
+        'uses' => 'MedicalController@index',
+        'middleware' => 'can:medical.medicals.index'
+    ]);
+    $router->get('medicals/create', [
+        'as' => 'admin.medical.medical.create',
+        'uses' => 'MedicalController@create',
+        'middleware' => 'can:medical.medicals.create'
+    ]);
+    $router->post('medicals', [
+        'as' => 'admin.medical.medical.store',
+        'uses' => 'MedicalController@store',
+        'middleware' => 'can:medical.medicals.create'
+    ]);
+    $router->get('medicals/{medical}/edit', [
+        'as' => 'admin.medical.medical.edit',
+        'uses' => 'MedicalController@edit',
+        'middleware' => 'can:medical.medicals.edit'
+    ]);
+    $router->put('medicals/{medical}', [
+        'as' => 'admin.medical.medical.update',
+        'uses' => 'MedicalController@update',
+        'middleware' => 'can:medical.medicals.edit'
+    ]);
+    $router->delete('medicals/{medical}', [
+        'as' => 'admin.medical.medical.destroy',
+        'uses' => 'MedicalController@destroy',
+        'middleware' => 'can:medical.medicals.destroy'
+    ]);
+    $router->get('medicals/export', [
+        'as' => 'admin.medical.export.index',
+        'uses' => 'MedicalController@exportCsv',
+        'middleware' => 'can:medical.medicals.index'
+    ]);
+    $router->get('medicals/delete-image', [
+        'as' => 'admin.medical.medical.deletefile',
+        'uses' => 'MedicalController@deleteFile',
+        'middleware' => 'can:medical.medicals.edit'
+    ]);
+    $router->get('medicals/ajax', [
+        'as' => 'admin.medical.ajax.getData',
+        'uses' => 'MedicalController@getData',
+        'middleware' => 'can:medical.medicals.create'
+    ]);
+    $router->post('medicals/bulk-delete', [
+        'as' => 'admin.medical.medical.bulkdelete',
+        'uses' => 'MedicalController@bulkDelete',
+        'middleware' => 'can:medical.medicals.destroy'
+    ]);
+
+
+    // router news
+    $router->bind('new', function ($id) {
+        return app('Modules\Pemedic\Repositories\NewRepository')->find($id);
+    });
+    $router->get('news', [
+        'as' => 'admin.new.new.index',
+        'uses' => 'NewsController@index',
+        'middleware' => 'can:new.news.index'
+    ]);
+    $router->get('news/create', [
+        'as' => 'admin.new.new.create',
+        'uses' => 'NewsController@create',
+        'middleware' => 'can:new.news.create'
+    ]);
+    $router->post('news', [
+        'as' => 'admin.new.new.store',
+        'uses' => 'NewsController@store',
+        'middleware' => 'can:new.news.create'
+    ]);
+    $router->get('news/{new}/edit', [
+        'as' => 'admin.new.new.edit',
+        'uses' => 'NewsController@edit',
+        'middleware' => 'can:new.news.edit'
+    ]);
+    $router->put('news/{new}', [
+        'as' => 'admin.new.new.update',
+        'uses' => 'NewsController@update',
+        'middleware' => 'can:new.news.edit'
+    ]);
+    $router->delete('news/{new}', [
+        'as' => 'admin.new.new.destroy',
+        'uses' => 'NewsController@destroy',
+        'middleware' => 'can:new.news.destroy'
+    ]);
+
+    $router->get('news/delete-image', [
+        'as' => 'admin.new.new.deleteImage',
+        'uses' => 'NewsController@deleteImage',
+        'middleware' => 'can:new.news.edit'
+    ]);
+    
+
 });

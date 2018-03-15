@@ -118,7 +118,7 @@ trait PemedicResponse {
      *
      * @return mixed
      */
-    public function respond($data, $headers = [])
+    public function respond($data, $message = '', $headers = [])
     {
         if(isset($data['data']['data'])){
             $data['data']['items'] = $data['data']['data'];
@@ -135,6 +135,38 @@ trait PemedicResponse {
      *
      * @return mixed
      */
+    public function respondWithSuccess($data, $message = '', $headers = [])
+    {
+        // return $this->respond([
+        //     'status'=> false,
+        //     "status_code"=> 500,
+        //     "message"=> $message,
+        //     "data"=>[]
+        // ]);
+        return response()->json([ 'message' => $message, 'data' => $data], $this->getStatusCode(), $headers);
+    }
+
+    /**
+     * @param $message
+     *
+     * @return mixed
+     */
+    public function respondWithMessage($message, $headers = [])
+    {
+        // return $this->respond([
+        //     'status'=> false,
+        //     "status_code"=> 500,
+        //     "message"=> $message,
+        //     "data"=>[]
+        // ]);
+        return response()->json([ 'message' => $message], $this->getStatusCode(), $headers);
+    }
+
+    /**
+     * @param $message
+     *
+     * @return mixed
+     */
     public function respondWithError($message)
     {
         // return $this->respond([
@@ -144,8 +176,7 @@ trait PemedicResponse {
         //     "data"=>[]
         // ]);
         return $this->respond([
-                'error' => [
-                'message' => $message],
+                'message' => $message,
             ]);
     }
 

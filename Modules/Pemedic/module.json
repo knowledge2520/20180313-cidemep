@@ -11,7 +11,7 @@
     ],
     "aliases": {},
     "files": [
-        
+        "helpers.php"
     ],
     "requires": []
 }

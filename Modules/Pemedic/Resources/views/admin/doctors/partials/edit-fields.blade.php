@@ -83,24 +83,24 @@
             {!! $errors->first('other_info', '<span class="help-block">:message</span>') !!}
         </div>
     </div>
-    <?php 
-        $clinic_user =  $doctor->clinic()->first();
-        if(empty($clinic_user))
-        {
-            $clinic_user = 0;
-        }
-        else
-        {
-            $clinic_user = $clinic_user->id;
-        }
-    ?>
     <div class=" form-group col-sm-12 {{ $errors->has('type') ? ' has-error' : '' }}">
         <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::doctors.table.clinic')}}</label>
-        <div class="col-sm-2 col-xs-12 ">
-            <select class="form-control" name="clinic_id">
+        <div class="col-sm-12 col-xs-12 ">
+            <select class="form-control select2" name="clinic_id[]" multiple="multiple">
                     <option value="">Select Clinic</option>
                     @foreach($clinics as $clinic)
-                        <option value="{{ $clinic->user->id }}" {{ $clinic_user == $clinic->user_id ? 'selected': '' }}>{{ $clinic->clinic_name }}</option>
+                        <option value="{{ $clinic->user->id }}" 
+                            <?php 
+                                $clinic_users =  $doctor->clinic()->get();
+                            ?>
+                            @if(count($clinic_users)>0)
+                                @foreach ($clinic_users as  $clinic_user) 
+                                    @if($clinic->user->id == $clinic_user->id)
+                                        selected
+                                    @endif
+                                @endforeach
+                            @endif 
+                            >{{ $clinic->clinic_name }}</option>
                     @endforeach
             </select>
         </div>
@@ -159,6 +159,7 @@
     $( document ).ready(function() {
         $('#dob').datepicker({
         });
+        $('.select2').select2();
     });
 </script>
 

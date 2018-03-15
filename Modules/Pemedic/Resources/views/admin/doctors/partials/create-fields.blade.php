@@ -1,4 +1,10 @@
 <div class="box-body">
+    @if(Session::has('email_error'))
+        <div class="form-group col-sm-12 alert alert-error fade in alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {{ Session::get('email_error') }}
+        </div>
+    @endif
     <div class=" form-group col-sm-12 {{ $errors->has('email') ? ' has-error' : '' }}">
         <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::doctors.table.email')}}</label>
         <div class="col-sm-12 col-xs-12 ">
@@ -86,8 +92,8 @@
     
     <div class=" form-group col-sm-12 {{ $errors->has('type') ? ' has-error' : '' }}">
         <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::patients.table.clinic')}}</label>
-        <div class="col-sm-2 col-xs-12 ">
-            <select class="form-control" name="clinic_id">
+        <div class="col-sm-12 col-xs-12 ">
+            <select class="form-control select2" name="clinic_id[]" multiple="multiple">
                     <option value="">Select Clinic</option>
                     @foreach($clinics as $clinic)
                         <option value="{{ $clinic->user_id }}" {{ $request->has('clinic_id') && $request->clinic_id == $clinic->user_id ? 'selected=selected': '' }} >{{ $clinic->clinic_name }}</option>
@@ -132,5 +138,6 @@
     $( document ).ready(function() {
         $('#dob').datepicker({
         });
+        $('.select2').select2();
     });
 </script>

@@ -11,7 +11,12 @@ class UpdatePatientRequest extends BaseFormRequest
         $patient = $this->route()->parameter('patient');
         $userId = $patient->id;
         return [
-            'email' => "required|email|unique:users,email,{$userId}",
+            'email' => "required|email|max:255|unique:users,email,{$userId}",
+            'phone' => 'required|max:255',
+            'height' => 'numeric',
+            'weight' => 'numeric',
+            'full_name' => 'max:255',
+            'address' => 'max:255',
         ];
     }
 

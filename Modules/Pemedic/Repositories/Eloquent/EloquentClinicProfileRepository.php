@@ -10,6 +10,11 @@ use DB;
 
 class EloquentClinicProfileRepository extends EloquentBaseRepository implements ClinicProfileRepository
 {
+    /**
+     * create users function
+     * @param array $data
+     * @return null / user object
+     */
 	public function createUser($data) {
 
         $driver = config('asgard.user.config.driver', 'Sentinel');
@@ -25,8 +30,8 @@ class EloquentClinicProfileRepository extends EloquentBaseRepository implements 
     }
 
     /**
-     * @param $user
-     * @description: create activation user record
+     * active users function
+     * @param user
      */
     public function activateUser($user) {
         $activationQuery = DB::table("activations")

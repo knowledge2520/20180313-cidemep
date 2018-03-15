@@ -12,6 +12,7 @@ return [
     ],
     'button' => [
         'create patient' => 'Create a patient',
+        'bulk delete' => 'Bulk delete',
         'exportCsv' => 'Export Patients To CSV',
     ],
     'table' => [

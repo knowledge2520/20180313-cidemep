@@ -11,6 +11,7 @@ return [
         'thumbnail' => 'Thumbnail',
     ],
     'tab' => [
+       'vietnamese' => 'Viet Nam',
         'english' => 'English',
         'french' => 'French',
         'dutch' => 'Dutch',

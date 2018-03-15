@@ -8,4 +8,5 @@ interface UserRepository extends BaseRepository
 {
 	public function showListUser($roleId,$users);
 	public function addNewUser($roleId,$allRequest,$status);
+	public function validateEmail($roleId,$email);
 }

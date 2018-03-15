@@ -31,4 +31,20 @@ return [
         'edit' => 'pemedic::doctors.edit resource',
         'destroy' => 'pemedic::doctors.destroy resource',
     ],
+
+    // config medical record permissons
+    'medical.medicals' => [
+        'index' => 'pemedic::medicals.list resource',
+        'create' => 'pemedic::medicals.create resource',
+        'edit' => 'pemedic::medicals.edit resource',
+        'destroy' => 'pemedic::medicals.destroy resource',
+    ],
+
+    // config news permissions
+    'new.news' => [
+        'index' => 'pemedic::news.list resource',
+        'create' => 'pemedic::news.create resource',
+        'edit' => 'pemedic::news.edit resource',
+        'destroy' => 'pemedic::news.destroy resource',
+    ],
 ];

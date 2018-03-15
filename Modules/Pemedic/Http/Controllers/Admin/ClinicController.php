@@ -41,7 +41,7 @@ class ClinicController extends AdminBaseController
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return clinic index template
      */
     public function index()
     {
@@ -52,7 +52,7 @@ class ClinicController extends AdminBaseController
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return create clinic template
      */
     public function create()
     {
@@ -62,8 +62,8 @@ class ClinicController extends AdminBaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  CreatePemedicRequest $request
-     * @return Response
+     * @param  CreateClinicRequest $request
+     * @return clinic index template
      */
     public function store(CreateClinicRequest $request)
     {
@@ -76,8 +76,8 @@ class ClinicController extends AdminBaseController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Pemedic $pemedic
-     * @return Response
+     * @param  ClinicProfile $clinic
+     * @return edit clinic template
      */
     public function edit(ClinicProfile $clinic)
     {
@@ -87,9 +87,9 @@ class ClinicController extends AdminBaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  Clinic $clinic
+     * @param  ClinicProfile $clinic
      * @param  UpdateClinicRequest $request
-     * @return Response
+     * @return clinic index template
      */
     public function update(ClinicProfile $clinic, UpdateClinicRequest $request)
     {
@@ -101,8 +101,8 @@ class ClinicController extends AdminBaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Pemedic $pemedic
-     * @return Response
+     * @param  ClinicProfile $clinic
+     * @return clinic index template
      */
     public function destroy(ClinicProfile $clinic)
     {
@@ -116,7 +116,6 @@ class ClinicController extends AdminBaseController
      * Remove image when edit clinic.
      *
      * @param  Request $request
-     * @return Response
      */
     public function deleteImage(Request $request)
     {

@@ -7,6 +7,11 @@ use Modules\Core\Repositories\Eloquent\EloquentBaseRepository;
 
 class EloquentUserProfileRepository extends EloquentBaseRepository implements UserProfileRepository
 {
+        /**
+         * get user with role_id function
+         * @param $role_id
+         * @return null / users object
+        */
 	public function items($role_id)
 	{
 		return $this->model->select('pemedic__user_profiles.*')
@@ -18,6 +23,12 @@ class EloquentUserProfileRepository extends EloquentBaseRepository implements Us
                 ->get();
 	}
 
+        /**
+         * filter users with clinc function
+         * @param $role_id
+         * @param $clinic_id
+         * @return null / users object
+        */
         public function filterClinic($role_id,$clinic_id)
         {
                 return $this->model->select('pemedic__user_profiles.*')

@@ -9,7 +9,10 @@ class CreateDoctorRequest extends BaseFormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|max:255',
+            'full_name' => 'max:255',
+            'address' => 'max:255',
         ];
     }
 

@@ -42,14 +42,13 @@
                         <table class="data-table table table-bordered table-hover">
                             <thead>
                             <tr>
+                                <th></th>
                                 <th>{{ trans('pemedic::patients.table.email') }}</th>
                                 <th>{{ trans('pemedic::patients.table.name') }}</th>
                                 <th>{{ trans('pemedic::patients.table.phone') }}</th>
                                 <th>{{ trans('pemedic::patients.table.address') }}</th>
                                 <th>{{ trans('pemedic::patients.table.gender') }}</th>
-                                <th>{{ trans('pemedic::patients.table.dob') }}</th>
                                 <th>{{ trans('pemedic::patients.table.type') }}</th>
-                                <th>{{ trans('pemedic::patients.table.clinic') }}</th>
                                 <th>{{ trans('pemedic::patients.table.image') }}</th>
                                 <th>{{ trans('pemedic::patients.table.status') }}</th>
                                 <th data-sortable="false" style="min-width: 75px">{{ trans('core::core.table.actions') }}</th>
@@ -59,6 +58,7 @@
                             <?php if (isset($patients)): ?>
                             <?php foreach ($patients as $patient): ?>
                             <tr>
+                                <td><input type="checkbox" name="patient_id[]" value="{{ $patient->id }}"></td>
                                 <td>
                                     <a href="{{ route('admin.patient.patient.edit', [$patient->user_id]) }}">
                                         {{ $patient->user->email }}
@@ -68,17 +68,7 @@
                                 <td>{{ $patient->phone }}</td>
                                 <td>{{ str_limit($patient->address, $limit = 50, $end = '...') }}</td>
                                 <td>{{ $patient->gender }}</td>
-                                <td>{{ $patient->dob }}</td>
                                 <td>{{ $patient->type }}</td>
-                                <td>
-                                    <?php 
-                                        $clinic_user =  $patient->user->clinic()->first();
-                                        if(!empty($clinic_user))
-                                        {
-                                            echo $clinic_user->last_name;
-                                        }
-                                    ?>
-                                </td>
                                 <td>
                                     <center>
                                         @if(!empty($patient->image))
@@ -105,14 +95,13 @@
                             </tbody>
                             <tfoot>
                             <tr>
+                                <th></th>
                                 <th>{{ trans('pemedic::patients.table.email') }}</th>
                                 <th>{{ trans('pemedic::patients.table.name') }}</th>
                                 <th>{{ trans('pemedic::patients.table.phone') }}</th>
                                 <th>{{ trans('pemedic::patients.table.address') }}</th>
                                 <th>{{ trans('pemedic::patients.table.gender') }}</th>
-                                <th>{{ trans('pemedic::patients.table.dob') }}</th>
                                 <th>{{ trans('pemedic::patients.table.type') }}</th>
-                                <th>{{ trans('pemedic::patients.table.clinic') }}</th>
                                 <th>{{ trans('pemedic::patients.table.image') }}</th>
                                 <th>{{ trans('pemedic::patients.table.status') }}</th>
                                 <th data-sortable="false">{{ trans('core::core.table.actions') }}</th>
@@ -123,6 +112,12 @@
                     </div>
                 </div>
                 <!-- /.box -->
+                <div class="box-footer">
+                    {!! Form::open(['route' => ['admin.doctor.doctor.bulkdelete'], 'method' => 'post']) !!}
+                        <input type="hidden" id="patient-hidden" name="users" value="">
+                        <button class="btn btn-danger pull-left btn-flat"> {{ trans('pemedic::patients.button.bulk delete') }}</button>
+                    {!! Form::close() !!}
+                </div>
             </div>
         </div>
     </div>
@@ -147,6 +142,17 @@
                 $clinic = $(this).val();
                 location.href = base_url + '/en/backend/pemedic/patients' + $clinic;
             });
+
+            var array=[];
+            $("input[name^='patient_id']").on("change",function(){
+                if($(this).prop('checked') ){
+                    array.push($(this).val() )
+                }else{
+                    array.splice( array.indexOf( $(this).val() ) , 1 ) ;
+                }
+
+                $("#patient-hidden").val(array.join(","));
+            })
         });
     </script>
 

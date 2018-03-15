@@ -111,8 +111,35 @@ class RegisterPemedicSidebar implements \Maatwebsite\Sidebar\SidebarExtender
                 });
             });
 
-        });
+            // sidebar doctor profile
+            $group->item(trans('pemedic::medicals.title.medicals'), function (Item $item) {
+                $item->icon('fa fa-copy');
+                $item->weight(10);
+                $item->authorize(
+                     /* append */
+                );
+                $item->item(trans('pemedic::medicals.title.medicals'), function (Item $item) {
+                    $item->icon('fa fa-copy');
+                    $item->weight(0);
+                    $item->append('admin.medical.medical.create');
+                    $item->route('admin.medical.medical.index');
+                    $item->authorize(
+                        $this->auth->hasAccess('medical.medicals.index')
+                    );
+                });
+            });
+            
+            // sidebar news 
+            $group->item(trans('pemedic::news.title.news'), function (Item $item) {
+                $item->icon('fa fa-copy');
+                    $item->weight(12);
+                    $item->route('admin.new.new.index');
+                    $item->authorize(
+                        $this->auth->hasAccess('new.news.index')
+                    );
+            });
 
+        });
         return $menu;
     }
 }
