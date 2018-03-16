@@ -124,7 +124,7 @@ class PemedicServiceProvider extends ServiceProvider
                 return new \Modules\Pemedic\Repositories\Cache\CacheMedicalRecordDecorator($repository);
             }
         );
-
+ 
         $this->app->bind(
             'Modules\Pemedic\Repositories\MedicalRecordFileRepository',
             function () {
@@ -152,28 +152,15 @@ class PemedicServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            'Modules\Pemedic\Repositories\MessageRepository',
+            'Modules\Pemedic\Repositories\InsuranceRepository',
             function () {
-                $repository = new \Modules\Pemedic\Repositories\Eloquent\EloquentMessageRepository(new \Modules\Pemedic\Entities\Message());
+                $repository = new \Modules\Pemedic\Repositories\Eloquent\EloquentInsuranceRepository(new \Modules\Pemedic\Entities\Insurance());
 
                 if (! config('app.cache')) {
                     return $repository;
                 }
 
-                return new \Modules\Pemedic\Repositories\Cache\CacheMessageDecorator($repository);
-            }
-        );
-
-        $this->app->bind(
-            'Modules\Pemedic\Repositories\NewsRepository',
-            function () {
-                $repository = new \Modules\Pemedic\Repositories\Eloquent\EloquentNewsRepository(new \Modules\Pemedic\Entities\News());
-
-                if (! config('app.cache')) {
-                    return $repository;
-                }
-
-                return new \Modules\Pemedic\Repositories\Cache\CacheNewsDecorator($repository);
+                return new \Modules\Pemedic\Repositories\Cache\CacheInsuranceDecorator($repository);
             }
         );
 
@@ -191,6 +178,19 @@ class PemedicServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            'Modules\Pemedic\Repositories\GroupRepository',
+            function () {
+                $repository = new \Modules\Pemedic\Repositories\Eloquent\EloquentGroupRepository(new \Modules\Pemedic\Entities\Group());
+
+                if (! config('app.cache')) {
+                    return $repository;
+                }
+
+                return new \Modules\Pemedic\Repositories\Cache\CacheGroupDecorator($repository);
+            }
+        );
+        
+        $this->app->bind(
             'Modules\Pemedic\Repositories\VoucherPatientRepository',
             function () {
                 $repository = new \Modules\Pemedic\Repositories\Eloquent\EloquentVoucherPatientRepository(new \Modules\Pemedic\Entities\VoucherPatient());
@@ -200,6 +200,19 @@ class PemedicServiceProvider extends ServiceProvider
                 }
 
                 return new \Modules\Pemedic\Repositories\Cache\CacheVoucherPatientDecorator($repository);
+            }
+        );
+        
+        $this->app->bind(
+            'Modules\Pemedic\Repositories\MessageRepository',
+            function () {
+                $repository = new \Modules\Pemedic\Repositories\Eloquent\EloquentMessageRepository(new \Modules\Pemedic\Entities\Message());
+
+                if (! config('app.cache')) {
+                    return $repository;
+                }
+
+                return new \Modules\Pemedic\Repositories\Cache\CacheMessageDecorator($repository);
             }
         );
     }

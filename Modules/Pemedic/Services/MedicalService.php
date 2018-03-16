@@ -10,6 +10,7 @@ use Modules\Pemedic\Repositories\ClinicProfileRepository;
 use Modules\Pemedic\Repositories\MedicalRecordRepository;
 use Modules\Pemedic\Repositories\MedicalRecordFileRepository;
 use Modules\Pemedic\Entities\MedicalRecord;
+use Modules\Pemedic\Repositories\GroupRepository;
 
 class MedicalService {
 
@@ -38,7 +39,12 @@ class MedicalService {
      */
     private $medicalRecordFileRepository;
 
-    public function __construct(UserProfileRepository $userProfileRepository,UserRepository $userRepository,ClinicProfileRepository $clinicRepository,MedicalRecordRepository $medicalRecordRepository,MedicalRecordFileRepository $medicalRecordFileRepository)
+    /**
+     * @var GroupRepository
+     */
+    private $groupRepository;
+
+    public function __construct(UserProfileRepository $userProfileRepository,UserRepository $userRepository,ClinicProfileRepository $clinicRepository,MedicalRecordRepository $medicalRecordRepository,MedicalRecordFileRepository $medicalRecordFileRepository,GroupRepository $groupRepository)
     {
 
         $this->userProfileRepository        = $userProfileRepository;
@@ -46,6 +52,7 @@ class MedicalService {
         $this->clinicRepository             = $clinicRepository;
         $this->medicalRecordRepository      = $medicalRecordRepository;
         $this->medicalRecordFileRepository  = $medicalRecordFileRepository;
+        $this->groupRepository              = $groupRepository;
     }
 
     /**
@@ -54,23 +61,61 @@ class MedicalService {
      */
     public function create($data = array(),$request)
     {
-        $data['date'] = !empty($data['date'])?date('Y-m-d', strtotime($data['date'])):null;
-        $medical = $this->medicalRecordRepository->create($data);
-        if($medical)
+        $data['date'] = !empty($data['date'])?date('Y-m-d', strtotime($data['date'])):date("Y-m-d");
+        if($data['patient_group'] == 1)
         {
+            $medical = $this->medicalRecordRepository->create($data);
+            if($medical)
+            {
+                if(!empty($data['file']))
+                {
+                    foreach ($request->file as $file) {
+                        $thumbnail = $file->getClientOriginalName();
+                        $path = $this->uploadFile($file,$medical);
+                        $this->medicalRecordFileRepository->create([
+                            'medical_id' => $medical->id,
+                            'patient_id' => $medical->patient_id,
+                            'path'       => $path,
+                            'thumbnail'  => $thumbnail,
+                        ]);
+                    }
+                }
+            }
+            return null;
+        }
+        else
+        {
+            $errors = [];
+            $group = $this->groupRepository->find($request->group_id);
+            $patients = $group->users;
             if(!empty($data['file']))
             {
                 foreach ($request->file as $file) {
                     $thumbnail = $file->getClientOriginalName();
-                    $file = $this->uploadFile($file,$medical);
-                    $this->medicalRecordFileRepository->create([
-                        'medical_id' => $medical->id,
-                        'patient_id' => $medical->patient_id,
-                        'path'       => $file,
-                        'thumbnail'  => $thumbnail,
-                    ]);
+                    $file_name =  explode('+',$thumbnail);
+                    $temp=0;
+                    foreach ($patients as $patient) {
+                        if($patient->email == $file_name[0])
+                        {
+                            $data['patient_id'] = $patient->id;
+                            $medical = $this->medicalRecordRepository->create($data);
+                            $path = $this->uploadFile($file,$medical);
+                            $this->medicalRecordFileRepository->create([
+                                'medical_id' => $medical->id,
+                                'patient_id' => $medical->patient_id,
+                                'path'       => $path,
+                                'thumbnail'  => $thumbnail,
+                            ]);
+                            $temp++;
+                        }
+                    }
+                    if($temp==0)
+                    {
+                        $errors[] = $thumbnail;
+                    }
                 }
             }
+            return $errors;
         }
     }
 
@@ -82,7 +127,7 @@ class MedicalService {
      */
     public function update(MedicalRecord $medical,$data = array(),$request)
     {
-        $data['date'] = !empty($data['date'])?date('Y-m-d', strtotime($data['date'])):null;
+        $data['date'] = !empty($data['date'])?date('Y-m-d', strtotime($data['date'])):date("Y-m-d");
         $this->medicalRecordRepository->update($medical,$data);
         if(!empty($data['file']))
         {
@@ -138,8 +183,8 @@ class MedicalService {
     {
         $s3 = \Storage::disk('local');
         $time = time();
-        $filePath = 'public/assets/' .$medical->clinic_id.'/'.$medical->date.'/'.$medical->patient_id.'/'. $file->getClientOriginalName();
-        $url = '/assets/'.$medical->clinic_id.'/'.$medical->date.'/'.$medical->patient_id.'/'. $file->getClientOriginalName();
+        $filePath = 'public/assets/'.'/'.$medical->date.'/'.$medical->patient_id.'/'. $file->getClientOriginalName();
+        $url = '/assets/'.'/'.$medical->date.'/'.$medical->patient_id.'/'. $file->getClientOriginalName();
         $result = $s3->put($filePath, file_get_contents($file),'public');
         if($result)
         {

@@ -13,6 +13,7 @@ use Modules\Pemedic\Http\Requests\Medicals\CreateMedicalRequest;
 use Modules\Pemedic\Http\Requests\Medicals\UpdateMedicalRequest;
 use Modules\Pemedic\Services\MedicalService;
 use Modules\Pemedic\Entities\MedicalRecord;
+use Modules\Pemedic\Repositories\GroupRepository;
 
 class MedicalController extends AdminBaseController
 {
@@ -41,7 +42,12 @@ class MedicalController extends AdminBaseController
      */
     private $medicalService;
 
-    public function __construct(UserProfileRepository $userProfileRepository,UserService $userService,ClinicProfileRepository $clinicProfileRepository,MedicalRecordRepository $medicalRecordRepository,MedicalService $medicalService)
+    /**
+     * @var GroupRepository
+     */
+    private $groupRepository;
+
+    public function __construct(UserProfileRepository $userProfileRepository,UserService $userService,ClinicProfileRepository $clinicProfileRepository,MedicalRecordRepository $medicalRecordRepository,MedicalService $medicalService,GroupRepository $groupRepository)
     {
         parent::__construct();
 
@@ -50,6 +56,7 @@ class MedicalController extends AdminBaseController
         $this->clinicProfileRepository  = $clinicProfileRepository;
         $this->medicalRecordRepository  = $medicalRecordRepository;
         $this->medicalService           = $medicalService;
+        $this->groupRepository          = $groupRepository;
     }
 
     /**
@@ -60,10 +67,10 @@ class MedicalController extends AdminBaseController
     public function index(Request $request)
     {
         $medicals    = $this->medicalRecordRepository->all();
-        if($request->has('clinic_id') && $request->clinic_id !=0)
-        {
-            $medicals   = $this->medicalRecordRepository->getByAttributes(['clinic_id'=>$request->clinic_id]);
-        }
+        // if($request->has('clinic_id') && $request->clinic_id !=0)
+        // {
+        //     $medicals   = $this->medicalRecordRepository->getByAttributes(['clinic_id'=>$request->clinic_id]);
+        // }
         $clinics     = $this->clinicProfileRepository->all();
         return view('pemedic::admin.medicals.index', compact('medicals','request','clinics'));
     }
@@ -75,10 +82,10 @@ class MedicalController extends AdminBaseController
      */
     public function create()
     {
-        $clinics     =  $this->clinicProfileRepository->all();
         $patients    =  $this->userProfileRepository->items(config('asgard.userprofile.config.roles.patient'));
         $doctors     =  $this->userProfileRepository->items(config('asgard.userprofile.config.roles.doctor'));
-        return view('pemedic::admin.medicals.create',compact('clinics','patients','doctors'));
+        $groups      =  $this->groupRepository->all();
+        return view('pemedic::admin.medicals.create',compact('patients','doctors','groups'));
     }
 
     /**
@@ -89,7 +96,17 @@ class MedicalController extends AdminBaseController
      */
     public function store(CreateMedicalRequest $request)
     {
-        $this->medicalService->create($request->all(),$request);
+        if(empty($request->patient_id) && empty($request->group_id))
+        {
+            return redirect()->route('admin.medical.medical.create')
+                ->with(['patient_error'=>"The Patient or Group field is required."]);
+        }
+        $medical = $this->medicalService->create($request->all(),$request);
+        if(!empty($medical))
+        {
+            return redirect()->route('admin.medical.medical.index')
+                ->with(['patient_error'=> $medical]);
+        }
         return redirect()->route('admin.medical.medical.index')
             ->withSuccess(trans('core::core.messages.resource created', ['name' => trans('pemedic::medicals.title.medicals')]));
     }
@@ -102,10 +119,9 @@ class MedicalController extends AdminBaseController
      */
     public function edit(MedicalRecord $medical)
     {
-        $clinics     =  $this->clinicProfileRepository->all();
         $patients    =  $this->userProfileRepository->items(config('asgard.userprofile.config.roles.patient'));
         $doctors     =  $this->userProfileRepository->items(config('asgard.userprofile.config.roles.doctor'));
-        return view('pemedic::admin.medicals.edit', compact('medical','clinics','patients','doctors'));
+        return view('pemedic::admin.medicals.edit', compact('medical','patients','doctors'));
     }
 
     /*
@@ -144,20 +160,7 @@ class MedicalController extends AdminBaseController
     {
         $this->medicalService->deleteFile($request->file_id);
     }
-
-    /**
-     * ajax get data doctor and patient.
-     *
-     * @param Request $request
-     * @return Response json list patient and doctor
-     */
-    public function getData(Request $request)
-    {
-        $patients   = $this->userProfileRepository->filterClinic(config('asgard.userprofile.config.roles.patient'),$request->clinic_id);
-        $doctors    = $this->userProfileRepository->filterClinic(config('asgard.userprofile.config.roles.doctor'),$request->clinic_id);
-        return response()->json(['patient' => $patients,'doctor'=>$doctors]);
-    }
-
+    
     /**
      * bulk delete medical.
      *

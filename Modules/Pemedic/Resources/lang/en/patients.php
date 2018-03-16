@@ -16,6 +16,7 @@ return [
         'exportCsv' => 'Export Patients To CSV',
     ],
     'table' => [
+        'no' => 'No',
         'email' => 'Email',
         'name' => 'Full name',
         'phone' => 'Phone',

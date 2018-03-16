@@ -3,19 +3,29 @@
 namespace Modules\Pemedic\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Voucher extends Model
 {
-
+    use SoftDeletes;
     protected $table = 'pemedic__vouchers';
-    protected $guard = [];
+    protected $fillable =[
+        'clinic_id',
+        'name',
+        'start_date',
+        'expiry_date',
+        'image',
+        'image_thumb',
+        'description'
+    ];
 
     //-----------  Relationship functions ----------- 
-    public function voucherPatient() {
-        return $this->HasOne('Modules\Pemedic\Entities\VoucherPatient', 'voucher_id');
+    public function users()
+    {
+        return $this->belongsToMany('Modules\Pemedic\Entities\User','pemedic__voucher_patient','voucher_id','patient_id');
     }
-
-    public function clinic() {
-        return $this->belongsTo('Modules\Pemedic\Entities\ClinicProfile', 'clinic_id');
+    public function clinic()
+    {
+        return $this->belongsTo('Modules\Pemedic\Entities\User','clinic_id');
     }
 }

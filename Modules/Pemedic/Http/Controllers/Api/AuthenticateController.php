@@ -81,9 +81,9 @@ class AuthenticateController extends AdminBaseController
             {
                 if($user->hasRoleId(5) && $user->status == 1)
                 {
-
                     $token = $user->createToken('Login Token')->accessToken;
                     $item = $user->withAccessToken($token);
+
                     return response([
                         'data' => [
                         'message'   =>  'Login Success',

@@ -1,7 +1,4 @@
 @extends('layouts.master')
-@section('styles')
-   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css">
-@stop
 
 @section('content-header')
     <h1>
@@ -50,9 +47,6 @@
     </dl>
 @stop
 
-@section('scripts')
-   <script type="text/javascript" src ="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
-@stop
 
 @push('js-stack')
     <script type="text/javascript">

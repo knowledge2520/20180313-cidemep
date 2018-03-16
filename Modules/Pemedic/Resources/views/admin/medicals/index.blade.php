@@ -11,20 +11,18 @@
 @stop
 
 @section('content')
+     @if(Session::has('patient_error') && count(Session::get('patient_error')) > 0)
+        <div class="alert alert-error fade in alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            @foreach (Session::get('patient_error') as $error)
+                <ul>
+                    <li>{{ $error }} import was not successful.</li>
+                </ul>
+            @endforeach
+        </div>
+    @endif
     <div class="row">
         <div class="col-xs-12">
-            <div style="width:200px;float: left;">
-                <select id="clinic" class="form-control" style="margin-bottom:5px!important;">
-                    <option value="?clinic_id=0">All Clinic</option>
-                    <?php if (isset($clinics)): 
-                        $clinicId = 'clinic_id='. $request->clinic_id;
-                    ?>
-                    <?php foreach ($clinics as $clinic): ?>
-                        <option {{ $request->has('clinic_id') && $request->clinic_id == $clinic->user_id ? 'selected=selected': '' }} value="?clinic_id={{$clinic->user_id}}">{{$clinic->clinic_name}}</option>
-                    <?php endforeach; ?>
-                    <?php endif; ?>
-                </select>
-            </div>
             <div class="row">
                 <div class="btn-group pull-right" style="margin: 0 15px 15px 0;">
                     <a href="{{ route('admin.medical.medical.create') }}" class="btn btn-primary btn-flat" style="padding: 4px 10px;">
@@ -43,7 +41,6 @@
                             <tr>
                                 <th></th>
                                 <th style="width:15px">{{ trans('pemedic::medicals.table.id') }}</th>
-                                <th>{{ trans('pemedic::medicals.table.clinic') }}</th>
                                 <th>{{ trans('pemedic::medicals.table.patient') }}</th>
                                 <th>{{ trans('pemedic::medicals.table.email') }}</th>
                                 <th>{{ trans('pemedic::medicals.table.doctor') }}</th>
@@ -57,10 +54,13 @@
                             <tr>
                                 <td><input type="checkbox" name="medical_id[]" value="{{ $medical->id }}"></td>
                                 <td>{{ $medical->id }}</td>
-                                <td>{{ $medical->clinic->clinicProfile->clinic_name }}</td>
                                 <td>{{ $medical->patient->profile->full_name }}</td>
                                 <td>{{ $medical->patient->email }}</td>
-                                <td>{{ $medical->doctor->profile->full_name }}</td>
+                                <td>
+                                    @if(!empty($medical->doctor_id))
+                                    {{ $medical->doctor->profile->full_name }}
+                                    @endif
+                                </td>
                                 <td>{{ $medical->date }}</td>
                                 <td>
                                     <div class="btn-group">
@@ -72,18 +72,6 @@
                             <?php endforeach; ?>
                             <?php endif; ?>
                             </tbody>
-                            <tfoot>
-                            <tr>
-                                <th></th>
-                                <th>{{ trans('pemedic::medicals.table.id') }}</th>
-                                <th>{{ trans('pemedic::medicals.table.clinic') }}</th>
-                                <th>{{ trans('pemedic::medicals.table.patient') }}</th>
-                                <th>{{ trans('pemedic::medicals.table.email') }}</th>
-                                <th>{{ trans('pemedic::medicals.table.doctor') }}</th>
-                                <th>{{ trans('pemedic::medicals.table.date') }}</th>
-                                <th data-sortable="false">{{ trans('core::core.table.actions') }}</th>
-                            </tr>
-                            </tfoot>
                         </table>
                         <!-- /.box-body -->
                     </div>
@@ -116,8 +104,8 @@
         $( document ).ready(function() {
             var base_url = window.location.origin;
             $('#clinic').change(function() {
-                $clinic = $(this).val();
-                location.href = base_url + '/en/backend/pemedic/medicals' + $clinic;
+                clinic = $(this).val();
+                location.href = base_url + '/en/backend/pemedic/medicals' + clinic;
             });
 
             var array=[];

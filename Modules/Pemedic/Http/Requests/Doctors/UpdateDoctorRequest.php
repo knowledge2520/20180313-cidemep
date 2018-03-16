@@ -12,9 +12,10 @@ class UpdateDoctorRequest extends BaseFormRequest
         $userId = $doctor->id;
         return [
             'email' => "required|email|max:255|unique:users,email,{$userId}",
-            'phone' => 'required|max:255',
+            'phone' => 'required|max:255|numeric',
             'full_name' => 'max:255',
             'address' => 'max:255',
+            'image' => 'mimes:jpeg,jpg,png',
         ];
     }
 

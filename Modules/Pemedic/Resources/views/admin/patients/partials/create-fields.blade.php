@@ -28,7 +28,7 @@
     <div class=" form-group col-sm-12 {{ $errors->has('phone') ? ' has-error' : '' }}">
         <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::patients.table.phone')}}</label>
         <div class="col-sm-12 col-xs-12 ">
-            <input type="text" class="form-control" name="phone" value="{{ old('phone') }}">
+            <input type="text" class="form-control" name="phone" value="{{ old('phone') }}" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
         </div>
         <div class="col-sm-12 col-xs-12 " >
             {!! $errors->first('phone', '<span class="help-block">:message</span>') !!}
@@ -128,7 +128,10 @@
     <div class="form-group col-sm-12 {{ $errors->has('image') ? ' has-error' : '' }}">
         <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::patients.table.image')}}</label>
         <div class="col-sm-12 col-xs-12 " >
-            <input type="file" name="image" multiple onchange="loadFile(event)" />
+            <input type="file" id="image-file" name="image" onchange="loadFile(event)" />
+            <span class="help-block">
+                <strong id="file-size-error" class="text-danger"></strong>
+            </span>
         </div>
         <div id="preview-pane">
             <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::patients.table.preview')}}</label>
@@ -160,4 +163,21 @@
         $('.select2').select2();
     });
 
+</script>
+
+<script type="text/javascript">
+    $( document ).ready(function() {
+        $('#image-file').bind('change', function() {
+            var file_size = this.files[0].size/1024/1024;
+            if(file_size >= 2)
+            {
+                $('#file-size-error').html("The file should not exceed 2MB");
+                $('#image-file').val("");
+            }
+            else
+            {
+                $('#file-size-error').remove();
+            }
+        });
+    });
 </script>

@@ -1,21 +1,8 @@
 <div class="box-body">
-
-    <div class=" form-group col-sm-12 {{ $errors->has('type') ? ' has-error' : '' }}">
-        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::medicals.table.clinic')}}</label>
-        <div class="col-sm-12 col-xs-12 ">
-            <select class="form-control" id="clinic" name="clinic_id">
-                    <option>{{trans('pemedic::medicals.table.clinic select')}}</option>
-                    @foreach($clinics as $clinic)
-                        <option value="{{ $clinic->user_id }}" {{ $medical->clinic_id == $clinic->user_id?"selected":"" }} >{{ $clinic->clinic_name }}</option>
-                    @endforeach
-            </select>
-        </div>
-    </div>
-    
     <div class=" form-group col-sm-12 {{ $errors->has('type') ? ' has-error' : '' }}">
         <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::medicals.table.patient')}}</label>
         <div class="col-sm-12 col-xs-12 ">
-            <select class="form-control patient" name="patient_id">
+            <select class="form-control select2" name="patient_id">
                     @foreach($patients as $patient)
                         <option value="{{ $patient->user_id }}" {{ $medical->patient_id == $patient->user_id?"selected":"" }} >{{ $patient->user->email }}</option>
                     @endforeach
@@ -26,7 +13,8 @@
     <div class=" form-group col-sm-12">
         <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::medicals.table.doctor')}}</label>
         <div class="col-sm-12 col-xs-12 doctor">
-            <select class="form-control" name="doctor_id">
+            <select class="form-control select2" name="doctor_id">
+                    <option value="">{{trans('pemedic::medicals.table.doctor select')}}</option>
                     @foreach($doctors as $doctor)
                         <option value="{{ $doctor->user_id }}" {{ $medical->doctor_id == $doctor->user_id?"selected":"" }}>{{ $doctor->user->email }}</option>
                     @endforeach
@@ -103,7 +91,6 @@
 </div>
 
 <div class="hidden theurl">{{ URL::route('admin.medical.medical.deletefile') }}</div>
-<div class="hidden theurl-ajax">{{ URL::route('admin.medical.ajax.getData') }}</div>
 
 <script type="text/javascript">
     var loadFile = function(event) {
@@ -119,6 +106,7 @@
    $( document ).ready(function() {
         $('#date').datepicker({
         });
+        $('.select2').select2();
     });
 </script>
 
@@ -133,36 +121,6 @@
                 url : $('.theurl').text(),
                 data : {'file_id':file_id},
                 success:function(data){
-                }
-            });
-        });
-    });
-</script>
-
-<script type="text/javascript">
-    $( document ).ready(function() {
-        var base_url = window.location.origin;
-        $('#clinic').change( function() {
-            var clinic_id     = $(this).val();
-            $.ajax({
-                type : 'GET',
-                url : $('.theurl-ajax').text(),
-                data : {'clinic_id':clinic_id},
-                success:function(data){
-                    
-                    var html = '<select class="form-control" name="patient_id">';
-                    var html_doctor = '<select class="form-control" name="doctor_id">';
-                    for (i = 0; i < data.patient.length; i++) { 
-                        html +='<option value="'+data.patient[i].user_id +'">'+data.patient[i].full_name+'</option>';                        
-                    }
-                    html += '</select>';
-
-                    for (i = 0; i < data.doctor.length; i++) { 
-                        html_doctor +='<option value="'+data.doctor[i].user_id +'">'+data.doctor[i].full_name+'</option>';                        
-                    }
-                    html_doctor += '</select>';
-                    $(".patient").html(html);
-                    $(".doctor").html(html_doctor);
                 }
             });
         });

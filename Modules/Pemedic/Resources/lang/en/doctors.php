@@ -6,7 +6,7 @@ return [
     'edit resource' => 'Edit doctor',
     'destroy resource' => 'Destroy doctor',
     'title' => [
-        'doctors' => 'doctors',
+        'doctors' => 'Doctors',
         'create doctor' => 'Create a doctor',
         'edit doctor' => 'Edit a doctor',
     ],

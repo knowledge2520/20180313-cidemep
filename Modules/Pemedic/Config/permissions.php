@@ -40,11 +40,27 @@ return [
         'destroy' => 'pemedic::medicals.destroy resource',
     ],
 
+    // config voucher permissons
+    'voucher.vouchers' => [
+        'index' => 'pemedic::vouchers.list resource',
+        'create' => 'pemedic::vouchers.create resource',
+        'edit' => 'pemedic::vouchers.edit resource',
+        'destroy' => 'pemedic::vouchers.destroy resource',
+    ],
+    
     // config news permissions
     'new.news' => [
         'index' => 'pemedic::news.list resource',
         'create' => 'pemedic::news.create resource',
         'edit' => 'pemedic::news.edit resource',
         'destroy' => 'pemedic::news.destroy resource',
+    ],
+
+    // config insurance permissions
+    'insurance.insurances' => [
+        'index' => 'pemedic::insurances.list resource',
+        'create' => 'pemedic::insurances.create resource',
+        'edit' => 'pemedic::insurances.edit resource',
+        'destroy' => 'pemedic::insurances.destroy resource',
     ],
 ];

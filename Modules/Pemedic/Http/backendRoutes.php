@@ -279,6 +279,96 @@ $router->group(['prefix' =>'/pemedic'], function (Router $router) {
         'uses' => 'NewsController@deleteImage',
         'middleware' => 'can:new.news.edit'
     ]);
-    
+
+    // router insurance
+    $router->bind('insurance', function ($id) {
+        return app('Modules\Pemedic\Repositories\InsuranceRepository')->find($id);
+    });
+    $router->get('insurances', [
+        'as' => 'admin.insurance.insurance.index',
+        'uses' => 'InsuranceController@index',
+        'middleware' => 'can:insurance.insurances.index'
+    ]);
+    $router->get('insurances/create', [
+        'as' => 'admin.insurance.insurance.create',
+        'uses' => 'InsuranceController@create',
+        'middleware' => 'can:insurance.insurances.create'
+    ]);
+    $router->post('news', [
+        'as' => 'admin.insurance.insurance.store',
+        'uses' => 'InsuranceController@store',
+        'middleware' => 'can:insurance.insurances.create'
+    ]);
+    $router->get('insurances/{insurance}/edit', [
+        'as' => 'admin.insurance.insurance.edit',
+        'uses' => 'InsuranceController@edit',
+        'middleware' => 'can:insurance.insurances.edit'
+    ]);
+    $router->put('insurances/{insurance}', [
+        'as' => 'admin.insurance.insurance.update',
+        'uses' => 'InsuranceController@update',
+        'middleware' => 'can:insurance.insurances.edit'
+    ]);
+    $router->delete('insurances/{insurance}', [
+        'as' => 'admin.insurance.insurance.destroy',
+        'uses' => 'InsuranceController@destroy',
+        'middleware' => 'can:insurance.insurances.destroy'
+    ]);
+
+    $router->get('insurances/delete-image', [
+        'as' => 'admin.insurance.insurance.deleteImage',
+        'uses' => 'InsuranceController@deleteImage',
+        'middleware' => 'can:insurance.insurances.edit'
+    ]);
+
+    // router voucher
+    $router->bind('voucher', function ($id) {
+        return app('Modules\Pemedic\Repositories\VoucherRepository')->find($id);
+    });
+    $router->get('vouchers', [
+        'as' => 'admin.voucher.voucher.index',
+        'uses' => 'VoucherController@index',
+        'middleware' => 'can:voucher.vouchers.index'
+    ]);
+    $router->get('vouchers/create', [
+        'as' => 'admin.voucher.voucher.create',
+        'uses' => 'VoucherController@create',
+        'middleware' => 'can:voucher.vouchers.create'
+    ]);
+    $router->post('vouchers', [
+        'as' => 'admin.voucher.voucher.store',
+        'uses' => 'VoucherController@store',
+        'middleware' => 'can:voucher.vouchers.create'
+    ]);
+    $router->get('vouchers/{voucher}/edit', [
+        'as' => 'admin.voucher.voucher.edit',
+        'uses' => 'VoucherController@edit',
+        'middleware' => 'can:voucher.vouchers.edit'
+    ]);
+    $router->put('vouchers/{voucher}', [
+        'as' => 'admin.voucher.voucher.update',
+        'uses' => 'VoucherController@update',
+        'middleware' => 'can:voucher.vouchers.edit'
+    ]);
+    $router->delete('vouchers/{voucher}', [
+        'as' => 'admin.voucher.voucher.destroy',
+        'uses' => 'VoucherController@destroy',
+        'middleware' => 'can:voucher.vouchers.destroy'
+    ]);
+    $router->get('vouchers/delete-image', [
+        'as' => 'admin.voucher.voucher.deleteImage',
+        'uses' => 'VoucherController@deleteImage',
+        'middleware' => 'can:voucher.vouchers.edit'
+    ]);
+    $router->get('vouchers/{voucher}/view', [
+        'as' => 'admin.voucher.voucher.view',
+        'uses' => 'VoucherController@view',
+        'middleware' => 'can:voucher.vouchers.edit'
+    ]);
+    $router->get('vouchers/add-patient', [
+        'as' => 'admin.voucher.voucher.addPatient',
+        'uses' => 'VoucherController@addPatient',
+        'middleware' => 'can:voucher.vouchers.edit'
+    ]);
 
 });

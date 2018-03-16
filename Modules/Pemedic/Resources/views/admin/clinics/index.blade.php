@@ -34,9 +34,8 @@
                                 <th>{{ trans('pemedic::clinics.table.phone') }}</th>
                                 <th>{{ trans('pemedic::clinics.table.vip phone') }}</th>
                                 <th>{{ trans('pemedic::clinics.table.address') }}</th>
-                                <th>{{ trans('pemedic::clinics.table.word time') }}</th>
+                                <th>{{ trans('pemedic::clinics.table.work time') }}</th>
                                 <th>{{ trans('pemedic::clinics.table.website') }}</th>
-                                <th>{{ trans('pemedic::clinics.table.image') }}</th>
                                 <th>{{ trans('pemedic::clinics.table.status') }}</th>
                                 <th data-sortable="false" style="min-width: 75px">{{ trans('core::core.table.actions') }}</th>
                             </tr>
@@ -57,13 +56,6 @@
                                 <td>{{ $clinic->word_time }}</td>
                                 <td>{{ $clinic->website }}</td>
                                 <td>
-                                    <center>
-                                        @if(!empty($clinic->image))
-                                            <img src="{{ $clinic->image }}" alt="" style="width:150px">
-                                        @endif
-                                    </center>
-                                </td>
-                                <td>
                                     @if($clinic->user->isActivated())
                                         <span class="label label-primary">{{ trans('pemedic::clinics.table.active') }}</span>
                                     @else
@@ -80,20 +72,6 @@
                             <?php endforeach; ?>
                             <?php endif; ?>
                             </tbody>
-                            <tfoot>
-                            <tr>
-                                <th>{{ trans('pemedic::clinics.table.email') }}</th>
-                                <th>{{ trans('pemedic::clinics.table.name') }}</th>
-                                <th>{{ trans('pemedic::clinics.table.phone') }}</th>
-                                <th>{{ trans('pemedic::clinics.table.vip phone') }}</th>
-                                <th>{{ trans('pemedic::clinics.table.address') }}</th>
-                                <th>{{ trans('pemedic::clinics.table.word time') }}</th>
-                                <th>{{ trans('pemedic::clinics.table.website') }}</th>
-                                <th>{{ trans('pemedic::clinics.table.image') }}</th>
-                                <th>{{ trans('pemedic::clinics.table.status') }}</th>
-                                <th data-sortable="false">{{ trans('core::core.table.actions') }}</th>
-                            </tr>
-                            </tfoot>
                         </table>
                         <!-- /.box-body -->
                     </div>

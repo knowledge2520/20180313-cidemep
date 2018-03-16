@@ -16,8 +16,6 @@ $router->group(['prefix' =>'/members', 'middleware' => ['auth:api','apiLog']], f
 
 include_once('Routes/api/medicalrecord.php');
 
-include_once('Routes/api/message.php');
-
 include_once('Routes/api/voucher.php');
 
-include_once('Routes/api/news.php');
+include_once('Routes/api/message.php');

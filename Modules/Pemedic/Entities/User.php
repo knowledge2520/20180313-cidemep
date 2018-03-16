@@ -156,6 +156,16 @@ class User extends EloquentUser implements UserInterface, AuthenticatableContrac
         return $this->belongsToMany('Modules\Pemedic\Entities\User','pemedic__user_clinic', 'user_id', 'clinic_id');
     }
 
+    public function vouchers()
+    {
+        return $this->belongsToMany('Modules\Pemedic\Entities\Voucher','pemedic__voucher_patient','patient_id','voucher_id');
+    }
+
+    public function groups()
+    {
+        return $this->belongsToMany('Modules\Pemedic\Entities\Group','pemedic__patient_group','group_id','patient_id');
+    }
+
     public function roles()
     {
         return $this->belongsToMany('Modules\Pemedic\Entities\Role', 'role_users','user_id', 'role_id');

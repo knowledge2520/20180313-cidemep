@@ -49,7 +49,6 @@
                                 <th>{{ trans('pemedic::patients.table.address') }}</th>
                                 <th>{{ trans('pemedic::patients.table.gender') }}</th>
                                 <th>{{ trans('pemedic::patients.table.type') }}</th>
-                                <th>{{ trans('pemedic::patients.table.image') }}</th>
                                 <th>{{ trans('pemedic::patients.table.status') }}</th>
                                 <th data-sortable="false" style="min-width: 75px">{{ trans('core::core.table.actions') }}</th>
                             </tr>
@@ -70,13 +69,6 @@
                                 <td>{{ $patient->gender }}</td>
                                 <td>{{ $patient->type }}</td>
                                 <td>
-                                    <center>
-                                        @if(!empty($patient->image))
-                                            <img src="{{ $patient->image }}" alt="" style="width:150px">
-                                        @endif
-                                    </center>
-                                </td>
-                                <td>
                                     @if($patient->user->isActivated())
                                         <span class="label label-primary">{{ trans('pemedic::patients.table.active') }}</span>
                                     @else
@@ -93,20 +85,6 @@
                             <?php endforeach; ?>
                             <?php endif; ?>
                             </tbody>
-                            <tfoot>
-                            <tr>
-                                <th></th>
-                                <th>{{ trans('pemedic::patients.table.email') }}</th>
-                                <th>{{ trans('pemedic::patients.table.name') }}</th>
-                                <th>{{ trans('pemedic::patients.table.phone') }}</th>
-                                <th>{{ trans('pemedic::patients.table.address') }}</th>
-                                <th>{{ trans('pemedic::patients.table.gender') }}</th>
-                                <th>{{ trans('pemedic::patients.table.type') }}</th>
-                                <th>{{ trans('pemedic::patients.table.image') }}</th>
-                                <th>{{ trans('pemedic::patients.table.status') }}</th>
-                                <th data-sortable="false">{{ trans('core::core.table.actions') }}</th>
-                            </tr>
-                            </tfoot>
                         </table>
                         <!-- /.box-body -->
                     </div>
@@ -139,8 +117,8 @@
         $( document ).ready(function() {
             var base_url = window.location.origin;
             $('#clinic').change(function() {
-                $clinic = $(this).val();
-                location.href = base_url + '/en/backend/pemedic/patients' + $clinic;
+                clinic = $(this).val();
+                location.href = base_url + '/en/backend/pemedic/patients' + clinic;
             });
 
             var array=[];

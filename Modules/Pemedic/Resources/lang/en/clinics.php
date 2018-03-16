@@ -19,7 +19,7 @@ return [
         'phone' => 'Phone',
         'vip phone' => 'Vip phone',
         'address' => 'Address',
-        'word time' => 'Word time',
+        'work time' => 'Work time',
         'website' => 'Website',
         'image' => 'Clinic image',
         'issurance' => 'Issurance',

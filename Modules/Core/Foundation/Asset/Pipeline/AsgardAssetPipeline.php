@@ -181,7 +181,7 @@ class AsgardAssetPipeline implements AssetPipeline
     private function guardForAssetNotFound($assetPath)
     {
         if (is_null($assetPath)) {
-            // throw new AssetNotFoundException($assetPath);
+            throw new AssetNotFoundException($assetPath);
         }
     }
 }

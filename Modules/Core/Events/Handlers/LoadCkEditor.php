@@ -8,8 +8,8 @@ class LoadCkEditor
 {
     public function handle(EditorIsRendering $editor)
     {
-        $editor->addJs('ckeditor.js');
-        $editor->setEditorClass('ckeditor');
+        // $editor->addJs('ckeditor.js');
+        // $editor->setEditorClass('ckeditor');
 
         return false;
     }

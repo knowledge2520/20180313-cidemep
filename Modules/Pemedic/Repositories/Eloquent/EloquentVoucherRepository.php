@@ -23,6 +23,12 @@ class EloquentVoucherRepository extends EloquentBaseRepository implements Vouche
         $this->model = $model;
     }
 
+    /**
+     * Author: Dung Vo
+     * [pushCriteria filter repository]
+     * @param  boolean $user [user]
+     * @return [object]      [model]
+     */
     public function pushCriteria($user = false){
 		$model = $this->model->with('voucherPatient')
 							 ->with('clinic')
@@ -35,6 +41,15 @@ class EloquentVoucherRepository extends EloquentBaseRepository implements Vouche
         return $model;
 	}
 
+	/**
+	 * Author: Dung Vo
+	 * [getList get list voucher]
+	 * @param  string  $option [list: return list items using pagination; count: return number of list items]
+	 * @param  [type]  $user   [object user]
+	 * @param  boolean $page   [position page]
+	 * @param  boolean $limit  [limit of pagination]
+	 * @return [mixed]          [list: array, count: intteger]
+	 */
 	public function getList($option = "list", $user, $page = false, $limit = false){
 
 		$offset = ($page - 1) * $limit;
@@ -54,6 +69,12 @@ class EloquentVoucherRepository extends EloquentBaseRepository implements Vouche
 		return $result;
 	}
 
+	/**
+	 * Author: Dung Vo
+	 * [getAll get all voucher of user]
+	 * @param  [type] $user [user]
+	 * @return [array]      [list items voucher]
+	 */
 	public function getAll($user){
 		return $this->pushCriteria($user)
 					->get();

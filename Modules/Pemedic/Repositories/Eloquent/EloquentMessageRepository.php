@@ -20,6 +20,11 @@ class EloquentMessageRepository extends EloquentBaseRepository implements Messag
         $this->model = $model;
     }
 
+    /**
+     * Author: Dung Vo
+     * [pushCriteria get model of repository, filter condition]
+     * @return [object] [model]
+     */
     public function pushCriteria(){
 		$model = $this->model->with('doctor')->whereHas('doctor',function($query){
             $query->where('status',1);
@@ -29,6 +34,15 @@ class EloquentMessageRepository extends EloquentBaseRepository implements Messag
         return $model;
 	}
 
+	/**
+	 * Author: Dung Vo
+	 * [getList get list items message with pagination or count number items news]
+	 * @param  string  $option [list: return list items using pagination; count: return number of list items]
+	 * @param  [type]  $user   [object user]
+	 * @param  boolean $page   [position page]
+	 * @param  boolean $limit  [limit of pagination]
+	 * @return [mixed]         [list: array, count: intteger]
+	 */
 	public function getList($option = "list", $user, $page = false, $limit = false, $messageId = false){
 
 		$offset = ($page - 1) * $limit;
@@ -86,6 +100,11 @@ class EloquentMessageRepository extends EloquentBaseRepository implements Messag
 		return $result;
 	}
 
+	/**
+	 * Author: Dung Vo
+	 * [getAll get all message]
+	 * @return [array]      [list items messages]
+	 */
 	public function getAll($user, $messageId = false){
 		if(!$messageId){
 			return $this->pushCriteria()
