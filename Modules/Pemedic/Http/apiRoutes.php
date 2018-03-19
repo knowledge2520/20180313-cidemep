@@ -19,3 +19,5 @@ include_once('Routes/api/medicalrecord.php');
 include_once('Routes/api/voucher.php');
 
 include_once('Routes/api/message.php');
+
+include_once('Routes/api/news.php');
