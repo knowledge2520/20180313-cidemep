@@ -7,14 +7,17 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 use Modules\Pemedic\Service\AuthService;
+use Modules\Pemedic\Services\MedicalService;
 use Hash;
 use Carbon\Carbon;
 use Auth;
 use Illuminate\Support\Facades\Storage;
 use Modules\Pemedic\Http\Transformer\UserTransformer;
+use Modules\Pemedic\Http\Transformer\MedicalRecordTransformer;
 use Modules\Pemedic\Repositories\MedicalRecordRepository;
 use Modules\Pemedic\Entities\MedicalRecordFile;
-class MedicalRecordController extends AdminBaseController
+
+class MedicalRecordController extends ApiBaseController
 {
     protected $auService; 
 
@@ -23,11 +26,16 @@ class MedicalRecordController extends AdminBaseController
      */
     private $medicalRecordRepository;
 
+    /**
+     * @var MedicalService
+     */
+    private $service;
 
-    public function __construct(AuthService $auService,MedicalRecordRepository $medicalRecordRepository)
+    public function __construct(AuthService $auService,MedicalRecordRepository $medicalRecordRepository, MedicalService $service)
     {
          $this->auService = $auService;
          $this->medicalRecordRepository = $medicalRecordRepository;
+         $this->service = $service;
     }
     /**
      * @SWG\Get(
@@ -44,11 +52,16 @@ class MedicalRecordController extends AdminBaseController
      *   }
      * )
      */
-    public function getListMedicalRecord(Request $request)
+    public function getListMedicalRecord(Request $request, MedicalRecordTransformer $transformer)
     {
         $patient = Auth::guard('api')->user();
-        $medicalRecords = $this->medicalRecordRepository->showListMedicalRecordByPatient($patient);
-        return $medicalRecords;
+        $take = $request->take ? $request->take : config('asgard.pemedic.config.take');
+        $page = $request->page ? $request->page : 1;
+        
+        $medicalRecords = $this->service->getListMedicalRecords($patient, $page, $take);
+        $items = $this->service->getAllMedicalRecords($patient);
+        $paginator = $this->service->getPaginator($items, $page, $take);
+        return $this->respondWithPagination($paginator, $transformer->transform($medicalRecords));
     }
     /**
      * @SWG\Post(

@@ -22,8 +22,8 @@ class NewsService {
 		$this->userRepository = $userRepository;
 	}
 
-	public function getListNews($page = false, $take = false){
-		return $this->repository->getList('list', $page, $take);
+	public function getListNews($lang = 'en', $page = false, $take = false){
+		return $this->repository->getList('list', $lang, $page, $take);
 	} 
 
 	public function getPaginator($items, $currentPage = false, $perPage = false){

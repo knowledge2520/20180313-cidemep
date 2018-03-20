@@ -17,6 +17,10 @@ class PemedicServiceProvider extends ServiceProvider
      */
     protected $defer = false;
 
+    protected $middleware = [
+        'api.mytoken' => CustAuthApiToken::class
+    ];
+    
     /**
      * Register the service provider.
      *
@@ -124,7 +128,7 @@ class PemedicServiceProvider extends ServiceProvider
                 return new \Modules\Pemedic\Repositories\Cache\CacheMedicalRecordDecorator($repository);
             }
         );
- 
+
         $this->app->bind(
             'Modules\Pemedic\Repositories\MedicalRecordFileRepository',
             function () {
@@ -202,7 +206,7 @@ class PemedicServiceProvider extends ServiceProvider
                 return new \Modules\Pemedic\Repositories\Cache\CacheVoucherPatientDecorator($repository);
             }
         );
-        
+
         $this->app->bind(
             'Modules\Pemedic\Repositories\MessageRepository',
             function () {
@@ -213,6 +217,19 @@ class PemedicServiceProvider extends ServiceProvider
                 }
 
                 return new \Modules\Pemedic\Repositories\Cache\CacheMessageDecorator($repository);
+            }
+        );
+
+        $this->app->bind(
+            'Modules\Pemedic\Repositories\NewsRepository',
+            function () {
+                $repository = new \Modules\Pemedic\Repositories\Eloquent\EloquentNewsRepository(new \Modules\Pemedic\Entities\News());
+
+                if (! config('app.cache')) {
+                    return $repository;
+                }
+
+                return new \Modules\Pemedic\Repositories\Cache\CacheNewsDecorator($repository);
             }
         );
     }

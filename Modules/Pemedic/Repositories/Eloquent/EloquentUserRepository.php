@@ -52,6 +52,9 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
             ->where('activations.user_id', $user->id)
             ->first();
 
+        $user->status = 1;
+        $user->save();
+        
         if(empty($activationQuery)) {
             $activation = Activation::create($user);
         } else {
@@ -165,7 +168,7 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
     }
 
     /**
-        Author : NhatML
+        Author : NhatMLs
         Todo : do something such generate the password
         Param : - param1 
                 - param2
@@ -173,5 +176,13 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
     **/
     public function findDoctor($id){
         return $this->pushDoctorCriteria()->find($id);
+    }
+
+    public function destroy($model){
+        $model->email = $model->email . '_' . \Carbon\carbon::now()->timestamp;
+        $model->save();
+        $model->delete();
+
+        return true;
     }
 }

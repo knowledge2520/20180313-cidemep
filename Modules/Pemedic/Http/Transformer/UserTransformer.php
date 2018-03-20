@@ -11,7 +11,14 @@ class UserTransformer extends Transformer
     public function getTransformation($user)
     {
         return [
-            'email' => $user->password
+            'id' => $user->id,
+            'email' => $user->email,
+            'phone' => $user->profile ? $user->profile->phone : "",
+            'dob' => $user->profile ? \Carbon\Carbon::parse($user->profile->dob)->format('d/m/Y') : "",
+            'gender' => $user->profile ? $user->profile->gender : "",
+            'height' => $user->profile ? $user->profile->height : "",
+            'weight' => $user->profile ? $user->profile->weight : "",
+            'other_info' => $user->profile ? $user->profile->other_info : "",
         ];
     }
 }

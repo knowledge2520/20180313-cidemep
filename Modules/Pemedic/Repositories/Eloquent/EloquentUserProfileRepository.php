@@ -41,4 +41,12 @@ class EloquentUserProfileRepository extends EloquentBaseRepository implements Us
                 ->groupBy('users.id')
                 ->get();
         }
+
+        public function destroy($model){
+        $model->phone = $model->phone . '_' . \Carbon\carbon::now()->timestamp;
+        $model->save();
+        $model->delete();
+
+        return true;
+    }
 }

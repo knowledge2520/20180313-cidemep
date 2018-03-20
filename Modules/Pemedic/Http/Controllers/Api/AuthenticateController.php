@@ -137,10 +137,10 @@ class AuthenticateController extends AdminBaseController
                     $user->status = 1;
                     $user->save();
                     $type = $this->auService->sendSMS($message,$request->phone);
-                    if($type == false){
+                    if($type !== true){
                         return response([
                                 'error' => [
-                                'message'   =>  'Send SMS error'],
+                                'message'   =>  $type],
                             ],Response::HTTP_OK);
 
                     }
@@ -172,10 +172,10 @@ class AuthenticateController extends AdminBaseController
             }
 
             $type = $this->auService->registerNewUser($message,$request,$password);
-            if($type == false){
+            if($type !== true){
                 return response([
                         'error' => [
-                        'message'   =>  'Send SMS error'],
+                        'message'   =>  $type],
                     ],Response::HTTP_OK);
 
             }

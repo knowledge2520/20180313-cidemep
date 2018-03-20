@@ -41,11 +41,11 @@ class VoucherService {
 
     public function __construct(ClinicProfileRepository $clinicRepository,UserRepository $userRepository,VoucherRepository $voucherRepository, VoucherPatientRepository $voucherPatientRepository, PatientRepository $patientRepository) {
         $this->clinicRepository         = $clinicRepository;
-		$this->userRepository           = $userRepository;
+        $this->userRepository           = $userRepository;
         $this->voucherRepository        = $voucherRepository;
-		$this->voucherPatientRepository = $voucherPatientRepository;
-		$this->patientRepository 		= $patientRepository;
-	}
+        $this->voucherPatientRepository = $voucherPatientRepository;
+        $this->patientRepository        = $patientRepository;
+    }
 
 
     /**
@@ -148,9 +148,9 @@ class VoucherService {
      * @param  boolean $take [limit]
      * @return array         [list items vouchers]
      */
-	public function getListVouchers($user, $page = false, $take = false){
-		return $this->voucherRepository->getList('list', $user, $page, $take);
-	} 
+    public function getListVouchers($user, $page = false, $take = false){
+        return $this->voucherRepository->getList('list', $user, $page, $take);
+    } 
 
     /**
      * Author: Dung Vo
@@ -159,8 +159,8 @@ class VoucherService {
      * @return array         [list items vouchers]
      */
     public function getAllVouchers($user){
-		return $this->voucherRepository->getAll($user);
-	} 
+        return $this->voucherRepository->getAll($user);
+    } 
 
     /**
      * [getPaginator get pagination for list item]
@@ -169,13 +169,13 @@ class VoucherService {
      * @param  boolean $perPage     [per page]
      * @return object               [items pagination]
      */
-	public function getPaginator($items, $currentPage = false, $perPage = false){
-		// $items = $this->repository->getAll($user);
-		$total = count($items);
-		$paginate = new Paginator($items, $total, $perPage, $currentPage);
+    public function getPaginator($items, $currentPage = false, $perPage = false){
+        // $items = $this->repository->getAll($user);
+        $total = count($items);
+        $paginate = new Paginator($items, $total, $perPage, $currentPage);
 
-		return $paginate;
-	}
+        return $paginate;
+    }
 
     /**
      * Author: Dung Vo
@@ -183,13 +183,13 @@ class VoucherService {
      * @param  object $user [user]
      * @return object       [item user]
      */
-	public function getToggleNotify($user){
-		$dataUser = $this->patientRepository->find($user->id);
-		$newStatus = $dataUser->profile->is_receive_voucher ? 0 : 1;
-		$dataUser->profile->update(['is_receive_voucher' => $newStatus]);
+    public function getToggleNotify($user){
+        $dataUser = $this->patientRepository->find($user->id);
+        $newStatus = $dataUser->profile->is_receive_voucher ? 0 : 1;
+        $dataUser->profile->update(['is_receive_voucher' => $newStatus]);
 
-		return $dataUser;
-	}
+        return $dataUser;
+    }
 
     /**
      * Author: Dung Vo
@@ -197,24 +197,24 @@ class VoucherService {
      * @param  number $id [id of voucher]
      * @return boolean    
      */
-	public function deleteVoucher($id){
-		$voucherPatient = $this->voucherPatientRepository->find($id);
-		if(count($voucherPatient)){
-			$voucherPatient->delete();
+    public function deleteVoucher($id){
+        $voucherPatient = $this->voucherPatientRepository->find($id);
+        if(count($voucherPatient)){
+            $voucherPatient->delete();
             return true;
-		}
+        }
 
         return false;
-	}
+    }
 
-	/**
-	 * Author: Dung Vo
-	 * [findVoucherPatient description]
-	 * @param  [type] $id   [description]
-	 * @param  [type] $user [description]
-	 * @return [type]       [description]
-	 */
-	public function findVoucherPatient($id, $user){
-		return $this->voucherPatientRepository->findByAttributes(['id' => $id, 'patient_id' => $user->id]);
-	}
+    /**
+     * Author: Dung Vo
+     * [findVoucherPatient find vouncher of patient user]
+     * @param  number $id   [id of voucher]
+     * @param  object $user [item patient user]
+     * @return array        [items voucher of patient user]
+     */
+    public function findVoucherPatient($id, $user){
+        return $this->voucherPatientRepository->findByAttributes(['id' => $id, 'patient_id' => $user->id]);
+    }
 }

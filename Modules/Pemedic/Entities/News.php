@@ -16,4 +16,11 @@ class News extends Model
         'updated_at',
         'deleted_at'
     ];
+
+    //-----------  Relationship functions ----------- 
+    public function translate()
+    {
+        return $this->hasmany('Modules\Pemedic\Entities\NewsTranslation','new_id');
+    }
+
 }

@@ -11,6 +11,7 @@ use Modules\Pemedic\Repositories\MedicalRecordRepository;
 use Modules\Pemedic\Repositories\MedicalRecordFileRepository;
 use Modules\Pemedic\Entities\MedicalRecord;
 use Modules\Pemedic\Repositories\GroupRepository;
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 
 class MedicalService {
 
@@ -183,7 +184,7 @@ class MedicalService {
     {
         $s3 = \Storage::disk('local');
         $time = time();
-        $filePath = 'public/assets/'.'/'.$medical->date.'/'.$medical->patient_id.'/'. $file->getClientOriginalName();
+        $filePath = 'public/assets/'.$medical->date.'/'.$medical->patient_id.'/'. $file->getClientOriginalName();
         $url = '/assets/'.'/'.$medical->date.'/'.$medical->patient_id.'/'. $file->getClientOriginalName();
         $result = $s3->put($filePath, file_get_contents($file),'public');
         if($result)
@@ -192,4 +193,41 @@ class MedicalService {
         } 
     }
     
+        /**
+     * Author: Dung Vo
+     * [getListMedicalRecords get list medical record of user]
+     * @param  object  $user [item patient user]
+     * @param  boolean $page [page]
+     * @param  boolean $take [limit]
+     * @return array         [list items vouchers]
+     */
+    public function getListMedicalRecords($user, $page = false, $take = false){
+        return $this->medicalRecordRepository->getList('list', $user, $page, $take);
+    } 
+
+    /**
+     * Author: Dung Vo
+     * [getAllMedicalRecords get all medical record of patient user]
+     * @param  object  $user [item patient user]
+     * @return array         [list items vouchers]
+     */
+    public function getAllMedicalRecords($user){
+        return $this->medicalRecordRepository->getAll($user);
+    } 
+
+    /**
+     * [getPaginator get pagination for list item]
+     * @param  object  $items       [items vouchers]
+     * @param  boolean $currentPage [current page]
+     * @param  boolean $perPage     [per page]
+     * @return object               [items pagination]
+     */
+    public function getPaginator($items, $currentPage = false, $perPage = false){
+        // $items = $this->repository->getAll($user);
+        $total = count($items);
+        $paginate = new Paginator($items, $total, $perPage, $currentPage);
+
+        return $paginate;
+    }
+
 }

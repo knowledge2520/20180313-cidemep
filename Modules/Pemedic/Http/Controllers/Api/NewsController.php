@@ -38,11 +38,19 @@ class NewsController extends ApiBaseController{
 
     /**
      * @SWG\Get(
-     *   path="/news/getListNews?take={take}&page={page}",
+     *   path="/news/getListNews?lang={lang}&take={take}&page={page}",
      *   summary="View",
      *   operationId="api.v1.news.getListNews",
      *   produces={"application/json"},
      *   tags={"News"},
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="path",
+     *     name="lang",
+     *     required=false,
+     *     type="string",
+     *     default="en" 
+     *   ),
      *   @SWG\Parameter(
      *     description="",
      *     in="path",
@@ -72,6 +80,7 @@ class NewsController extends ApiBaseController{
         $user = Auth::guard('api')->user();
         $take = $request->take ? $request->take : config('asgard.pemedic.config.take');
         $page = $request->page ? $request->page : 1;
+        $lang = $request->lang ? $request->lang : 'en';
 
         if(isset($user) && !empty($user))
         {
@@ -79,7 +88,7 @@ class NewsController extends ApiBaseController{
             
             $news = $items = [];
             if($dataUser->profile && $dataUser->profile->is_receive_news){
-                $news = $this->service->getListNews($page, $take);
+                $news = $this->service->getListNews($lang, $page, $take);
                 $items = $this->service->getAllNews();
             }
 

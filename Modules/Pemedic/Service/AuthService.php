@@ -36,7 +36,7 @@ class AuthService
             return true;
         }
         catch(\Exception $e){
-            return false;
+            return $e->getMessage();
         }
     }
     public function sendSMS($message, $phone)
@@ -46,7 +46,7 @@ class AuthService
             return true;
         }
         catch(\Exception $e){
-            return false;
+            return $e->getMessage();
         }
         
     }
