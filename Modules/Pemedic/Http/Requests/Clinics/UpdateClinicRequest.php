@@ -13,8 +13,8 @@ class UpdateClinicRequest extends BaseFormRequest
         return [
             'email' => "required|email|max:255|unique:users,email,{$userId}",
             'clinic_name' => 'required|max:255',
-            'phone' => 'required|max:255|numeric',
-            'vip_phone' => 'required|max:255|numeric',
+            'phone' => 'required|numeric',
+            'vip_phone' => 'required|numeric',
             'address' => 'max:255',
             'map' => 'max:255',
             'word_time' => 'max:255',

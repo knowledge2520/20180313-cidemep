@@ -111,11 +111,75 @@ class AuthenticateController extends AdminBaseController
      *   produces={"application/json"},
      *   tags={"Authenticate"},
      *   @SWG\Parameter(
-     *     name="body",
-     *     in="body",
-     *     description="Target customer.",
+     *     description="email",
+     *     in="formData",
+     *     name="email",
      *     required=true,
-     *    @SWG\Schema(ref="#/definitions/Register")
+     *     type="string",
+     *     default="test@test.com" 
+     *   ),
+     *   @SWG\Parameter(
+     *     description="name",
+     *     in="formData",
+     *     name="full_name",
+     *     required=true,
+     *     type="string",
+     *     default="name" 
+     *   ),
+     *   @SWG\Parameter(
+     *     description="phone",
+     *     in="formData",
+     *     name="phone",
+     *     required=true,
+     *     type="string",
+     *     default="841207423094" 
+     *   ),
+     *   @SWG\Parameter(
+     *     description="address",
+     *     in="formData",
+     *     name="address",
+     *     required=false,
+     *     type="string",
+     *     default="168/6 Bùi Thị Xuân" 
+     *   ),
+     *   @SWG\Parameter(
+     *     description="gender",
+     *     in="formData",
+     *     name="gender",
+     *     required=false,
+     *     type="string",
+     *     default="Male" 
+     *   ),
+     *   @SWG\Parameter(
+     *     description="dob",
+     *     in="formData",
+     *     name="dob",
+     *     required=false,
+     *     type="string",
+     *     default="2018-03-07" 
+     *   ),
+     *   @SWG\Parameter(
+     *     description="height",
+     *     in="formData",
+     *     name="height",
+     *     required=false,
+     *     type="string",
+     *     default="168" 
+     *   ),
+     *   @SWG\Parameter(
+     *     description="weight",
+     *     in="formData",
+     *     name="weight",
+     *     required=false,
+     *     type="string",
+     *     default="61" 
+     *   ),
+     *   @SWG\Parameter(
+     *     name="file[]",
+     *     in="formData",
+     *     description="avatar's profile",
+     *     required=false,
+     *     type= "file",
      *   ),
      *   @SWG\Response(response=103, description="The email has already been taken"),
      *   @SWG\Response(response=104, description="Send mail error"),

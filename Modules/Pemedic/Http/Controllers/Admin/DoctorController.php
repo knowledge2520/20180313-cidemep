@@ -130,6 +130,12 @@ class DoctorController extends AdminBaseController
      */
     public function destroy(User $doctor)
     {
+        $doctor->email = $doctor->email . time();
+        $doctor->save();
+
+        $user = $doctor->profile;
+        $user->phone = $user->phone . time();
+        $user->save();
         $this->userProfileRepository->destroy($doctor->profile);
         $this->userRepository->destroy($doctor);
         return redirect()->route('admin.doctor.doctor.index')

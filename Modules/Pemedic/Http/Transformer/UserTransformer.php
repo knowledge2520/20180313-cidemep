@@ -18,7 +18,7 @@ class UserTransformer extends Transformer
             'gender' => $user->profile ? $user->profile->gender : "",
             'height' => $user->profile ? $user->profile->height : "",
             'weight' => $user->profile ? $user->profile->weight : "",
-            'other_info' => $user->profile ? $user->profile->other_info : "",
+            'other_info' => $user->profile ? ($user->profile->other_info ? $user->profile->other_info : "") : "",
         ];
     }
 }

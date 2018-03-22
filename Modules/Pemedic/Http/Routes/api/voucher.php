@@ -7,5 +7,5 @@ $router->group(['prefix' =>'/voucher', 'middleware' => ['auth:api','apiLog']], f
 {
    $router->get('getListVouchers',['uses'=>'VoucherController@getListVouchers','as'=>'api.voucher.voucher.getListVouchers', 'before'=>'is_guest']);
    $router->get('getToggleNofify',['uses'=>'VoucherController@getToggleNofify','as'=>'api.voucher.voucher.getToggleNofify', 'before'=>'is_guest']);
-   $router->get('getDeleteVoucher',['uses'=>'VoucherController@getDeleteVoucher','as'=>'api.voucher.voucher.getDeleteVoucher', 'before'=>'is_guest']);
+   $router->get('deleteVoucher',['uses'=>'VoucherController@deleteVoucher','as'=>'api.voucher.voucher.deleteVoucher', 'before'=>'is_guest']);
 });

@@ -112,9 +112,9 @@ class VoucherController extends ApiBaseController{
 
     /**
      * @SWG\Get(
-     *   path="/voucher/getDeleteVoucher?id={id}",
+     *   path="/voucher/deleteVoucher?id={id}",
      *   summary="View",
-     *   operationId="api.v1.voucher.getDeleteVoucher",
+     *   operationId="api.v1.voucher.deleteVoucher",
      *   produces={"application/json"},
      *   tags={"Voucher"},
      *   @SWG\Parameter(
@@ -141,7 +141,7 @@ class VoucherController extends ApiBaseController{
      * )
      *
      */
-    public function getDeleteVoucher(DeleteVoucherRequest $request, ToggleNotifyTransformer $toggleNotifyTransformer)
+    public function deleteVoucher(DeleteVoucherRequest $request)
     {
         $user = Auth::guard('api')->user();
         $id = $request->id ? $request->id : false;

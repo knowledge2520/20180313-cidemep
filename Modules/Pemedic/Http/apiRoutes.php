@@ -21,3 +21,9 @@ include_once('Routes/api/voucher.php');
 include_once('Routes/api/message.php');
 
 include_once('Routes/api/news.php');
+
+include_once('Routes/api/clinic.php');
+
+include_once('Routes/api/page.php');
+
+include_once('Routes/api/search.php');

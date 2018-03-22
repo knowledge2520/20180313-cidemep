@@ -106,6 +106,9 @@ class ClinicController extends AdminBaseController
      */
     public function destroy(ClinicProfile $clinic)
     {
+        $user = $clinic->user;
+        $user->email = $user->email . time();
+        $user->save();
         $this->clinic->destroy($clinic);
         $this->userRepository->destroy($clinic->user);
         return redirect()->route('admin.clinic.clinic.index')

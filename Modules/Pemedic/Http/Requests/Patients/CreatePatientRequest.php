@@ -10,7 +10,7 @@ class CreatePatientRequest extends BaseFormRequest
     {
         return [
             'email' => 'required|email|max:255',
-            'phone' => 'required|max:255|numeric',
+            'phone' => 'required|numeric|unique:pemedic__user_profiles,phone',
             'height' => 'numeric',
             'weight' => 'numeric',
             'full_name' => 'max:255',

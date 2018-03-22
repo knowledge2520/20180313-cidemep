@@ -12,16 +12,16 @@ class EloquentUserProfileRepository extends EloquentBaseRepository implements Us
          * @param $role_id
          * @return null / users object
         */
-	public function items($role_id)
-	{
-		return $this->model->select('pemedic__user_profiles.*')
+        public function items($role_id)
+        {
+                return $this->model->select('pemedic__user_profiles.*')
                 ->join('users', 'users.id', '=', 'pemedic__user_profiles.user_id', 'right')
                 ->join('role_users', 'role_users.user_id', '=', 'users.id', 'inner')
                 ->join('roles', 'roles.id', '=', 'role_users.role_id', 'inner')
                 ->where('roles.id', $role_id)
                 ->groupBy('users.id')
                 ->get();
-	}
+        }
 
         /**
          * filter users with clinc function
@@ -31,7 +31,7 @@ class EloquentUserProfileRepository extends EloquentBaseRepository implements Us
         */
         public function filterClinic($role_id,$clinic_id)
         {
-                return $this->model->select('pemedic__user_profiles.*')
+                return $this->model->select('pemedic__user_profiles.*','users.email')
                 ->join('users', 'users.id', '=', 'pemedic__user_profiles.user_id', 'right')
                 ->join('role_users', 'role_users.user_id', '=', 'users.id', 'inner')
                 ->join('roles', 'roles.id', '=', 'role_users.role_id', 'inner')

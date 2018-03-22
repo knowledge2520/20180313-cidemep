@@ -5,9 +5,24 @@
             {{ Session::get('patient_error') }}
         </div>
     @endif
+    <div class=" form-group col-sm-12 {{ $errors->has('clinic_id') ? ' has-error' : '' }}">
+        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::medicals.table.clinic')}} <span class="text-danger"> (*) </span></label>
+        <div class="col-sm-12 col-xs-12 ">
+            <select class="form-control" name="clinic_id" id="clinic">
+                    <option value="">{{trans('pemedic::medicals.table.clinic select')}}</option>
+                    @foreach($clinics as $clinic)
+                        <option value="{{ $clinic->user_id }}" >{{ $clinic->clinic_name }}</option>
+                    @endforeach
+            </select>
+        </div>
+        <div class="col-sm-12 col-xs-12 " >
+            {!! $errors->first('clinic_id', '<span class="help-block">:message</span>') !!}
+        </div>
+    </div>
+
     <div class="form-group col-sm-12">
         <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::medicals.table.type')}}</label>
-        <div class="col-sm-12 col-xs-12 patient">
+        <div class="col-sm-12 col-xs-12">
            <select class="form-control" name="patient_group" id="type">
                     <option value="1">{{trans('pemedic::medicals.table.patient')}}</option>
                     <option value="2">{{trans('pemedic::medicals.table.group')}}</option>
@@ -16,44 +31,29 @@
     </div>
 
     <div class="form-group col-sm-12 {{ $errors->has('patient_id') ? ' has-error' : '' }}" id="patient">
-        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::medicals.table.patient')}}</label>
-        <div class="col-sm-12 col-xs-12">
-           <select class="form-control select2" name="patient_id">
-                    <option value="">{{trans('pemedic::medicals.table.patient select')}}</option>
-                    @foreach($patients as $patient)
-                        <option value="{{ $patient->user_id }}" >{{ $patient->user->email }}</option>
-                    @endforeach
-            </select>
+        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::medicals.table.patient')}} <span class="text-danger"> (*) </span></label>
+        <div class="col-sm-12 col-xs-12 patient">
+           
         </div>
         <div class="col-sm-12 col-xs-12 " >
             {!! $errors->first('patient_id', '<span class="help-block">:message</span>') !!}
         </div>
     </div>
 
-    <div class="form-group col-sm-12 {{ $errors->has('patient_id') ? ' has-error' : '' }}" id="group">
-        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::medicals.table.group')}}</label>
-        <div class="col-sm-12 col-xs-12">
-           <select class="form-control select2" name="group_id">
-                    <option value="">{{trans('pemedic::medicals.table.group select')}}</option>
-                    @foreach($groups as $group)
-                        <option value="{{ $group->id }}" >{{ $group->name }}</option>
-                    @endforeach
-            </select>
+    <div class="form-group col-sm-12 {{ $errors->has('group_id') ? ' has-error' : '' }}" id="group">
+        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::medicals.table.group')}} <span class="text-danger"> (*) </span></label>
+        <div class="col-sm-12 col-xs-12 group">
+           
         </div>
         <div class="col-sm-12 col-xs-12 " >
-            {!! $errors->first('patient_id', '<span class="help-block">:message</span>') !!}
+            {!! $errors->first('group_id', '<span class="help-block">:message</span>') !!}
         </div>
     </div>
 
     <div class=" form-group col-sm-12">
         <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::medicals.table.doctor')}}</label>
         <div class="col-sm-12 col-xs-12 doctor">
-            <select class="form-control select2" name="doctor_id" id="doctor_id">
-                    <option value="">{{trans('pemedic::medicals.table.doctor select')}}</option>
-                    @foreach($doctors as $doctor)
-                        <option value="{{ $doctor->user_id }}" >{{ $doctor->user->email }}</option>
-                    @endforeach
-            </select>
+            
         </div>
     </div>
 
@@ -86,28 +86,45 @@
 
 <div class="hidden theurl">{{ URL::route('admin.medical.ajax.getData') }}</div>
 
-<script type="text/javascript">
-    var loadFile = function(event) {
-        $("#preview-pane").show();
-        var reader = new FileReader();
-        reader.onload = function(){
-        var output = document.getElementById('output');
-        output.src = reader.result;
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    };
 
-   $( document ).ready(function() {
-        $('#date').datepicker({
-        });
-        $('.select2').select2();
-    });
-</script>
 
 <script type="text/javascript">
     $( document ).ready(function() {
         var base_url = window.location.origin;
         $("#group").hide();
+        $("#doctor").hide();
+        $('#clinic').change( function() {
+            var clinic_id     = $(this).val();
+            $.ajax({
+                type : 'GET',
+                url : $('.theurl').text(),
+                data : {'clinic_id':clinic_id},
+                success:function(data){
+                    var html = '<select class="form-control select2" id="patient_change" name="patient_id">';
+                    var html_doctor = '<select class="form-control select2" name="doctor_id">';
+                    var html_group = '<select class="form-control" name="group_id">';
+                    for (i = 0; i < data.patient.length; i++) { 
+                        html +='<option value="'+data.patient[i].user_id +'">'+data.patient[i].email+'</option>';                        
+                    }
+                    html += '</select>';
+
+                    for (i = 0; i < data.doctor.length; i++) { 
+                        html_doctor +='<option value="'+data.doctor[i].user_id +'">'+data.doctor[i].email+'</option>';                        
+                    }
+                    html_doctor += '</select>';
+
+                    for (i = 0; i < data.group.length; i++) { 
+                        html_group +='<option value="'+data.group[i].id +'">'+data.group[i].name+'</option>';                        
+                    }
+                    html_group += '</select>';
+
+                    $(".patient").html(html);
+                    $(".doctor").html(html_doctor);
+                    $(".group").html(html_group);
+                    $('.select2').select2();
+                }
+            });
+        });
         $('#type').change( function() {
             var type     = $(this).val();
             if(type==1)
@@ -120,6 +137,24 @@
                 $("#group").show();
                 $("#patient").hide();
             }
+        });
+
+    });
+</script>
+
+<script type="text/javascript">
+    var loadFile = function(event) {
+        $("#preview-pane").show();
+        var reader = new FileReader();
+        reader.onload = function(){
+        var output = document.getElementById('output');
+        output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    };
+
+    $( document ).ready(function() {
+        $('#date').datepicker({
         });
     });
 </script>

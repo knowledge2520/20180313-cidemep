@@ -10,9 +10,10 @@ class UpdateDoctorRequest extends BaseFormRequest
     {
         $doctor = $this->route()->parameter('doctor');
         $userId = $doctor->id;
+        $userProfile_id = $doctor->profile->id;
         return [
             'email' => "required|email|max:255|unique:users,email,{$userId}",
-            'phone' => 'required|max:255|numeric',
+            'phone' => "required|numeric|unique:pemedic__user_profiles,phone,{$userProfile_id}",
             'full_name' => 'max:255',
             'address' => 'max:255',
             'image' => 'mimes:jpeg,jpg,png',

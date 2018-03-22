@@ -32,7 +32,8 @@ class EloquentMedicalRecordRepository extends EloquentBaseRepository implements 
 							 // ->with('clinic')
 							 ->whereHas('patient', function($query) use ($user){
 								$query->where('patient_id', $user->id);
-							 });
+							 })
+							 ->where('is_patient_deleted', 0);
 							 /*->whereHas('clinic', function($query){
 							 	// $query->where('status', 1);
 							 });*/
@@ -81,6 +82,11 @@ class EloquentMedicalRecordRepository extends EloquentBaseRepository implements 
 
 	public function showListMedicalRecordByPatient($patient)
 	{
+		$medicalRecords = $this->model->where('patient_id',$patient->id)->groupBy('clinic_id')->get();
+		return $medicalRecords;
+	}
+
+	public function deleteMedicalRecord($id){
 		$medicalRecords = $this->model->where('patient_id',$patient->id)->groupBy('clinic_id')->get();
 		return $medicalRecords;
 	}

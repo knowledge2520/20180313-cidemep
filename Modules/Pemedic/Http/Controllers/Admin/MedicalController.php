@@ -85,7 +85,8 @@ class MedicalController extends AdminBaseController
         $patients    =  $this->userProfileRepository->items(config('asgard.userprofile.config.roles.patient'));
         $doctors     =  $this->userProfileRepository->items(config('asgard.userprofile.config.roles.doctor'));
         $groups      =  $this->groupRepository->all();
-        return view('pemedic::admin.medicals.create',compact('patients','doctors','groups'));
+        $clinics     =  $this->clinicProfileRepository->all();
+        return view('pemedic::admin.medicals.create',compact('patients','doctors','groups','clinics'));
     }
 
     /**
@@ -119,9 +120,14 @@ class MedicalController extends AdminBaseController
      */
     public function edit(MedicalRecord $medical)
     {
-        $patients    =  $this->userProfileRepository->items(config('asgard.userprofile.config.roles.patient'));
-        $doctors     =  $this->userProfileRepository->items(config('asgard.userprofile.config.roles.doctor'));
-        return view('pemedic::admin.medicals.edit', compact('medical','patients','doctors'));
+        $clinics     =  $this->clinicProfileRepository->all();
+        $patients    =  $this->userProfileRepository->filterClinic(config('asgard.userprofile.config.roles.patient'),$medical->clinic_id);
+        $doctors     =  $this->userProfileRepository->filterClinic(config('asgard.userprofile.config.roles.doctor'),$medical->clinic_id);
+        if(empty($medical->clinic_id))
+        {
+            return view('pemedic::admin.medicals.view', compact('medical'));
+        }
+        return view('pemedic::admin.medicals.edit', compact('medical','clinics','patients','doctors'));
     }
 
     /*
@@ -159,6 +165,20 @@ class MedicalController extends AdminBaseController
     public function deleteFile(Request $request)
     {
         $this->medicalService->deleteFile($request->file_id);
+    }
+
+    /**
+     * ajax get data doctor and patient.
+     *
+     * @param Request $request
+     * @return Response json list patient and doctor
+     */
+    public function getData(Request $request)
+    {
+        $patients   = $this->userProfileRepository->filterClinic(config('asgard.userprofile.config.roles.patient'),$request->clinic_id);
+        $doctors    = $this->userProfileRepository->filterClinic(config('asgard.userprofile.config.roles.doctor'),$request->clinic_id);
+        $groups     = $this->groupRepository->getByAttributes(['clinic_id' => $request->clinic_id]);
+        return response()->json(['patient' => $patients,'doctor'=>$doctors,'group'=>$groups]);
     }
     
     /**

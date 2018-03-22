@@ -9,11 +9,13 @@ return [
         'patients' => 'Patients',
         'create patient' => 'Create a patient',
         'edit patient' => 'Edit a patient',
+        'import patient' => 'Import CSV Patients',
     ],
     'button' => [
         'create patient' => 'Create a patient',
-        'bulk delete' => 'Bulk delete',
         'exportCsv' => 'Export Patients To CSV',
+        'import' => 'Import Patients',
+        'bulk delete' => 'Bulk delete',
     ],
     'table' => [
         'no' => 'No',
@@ -40,6 +42,7 @@ return [
         'current' => 'Current image:',
     ],
     'form' => [
+        'select file' => 'Select file'
     ],
     'messages' => [
     ],

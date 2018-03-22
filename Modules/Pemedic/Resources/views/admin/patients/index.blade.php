@@ -11,6 +11,32 @@
 @stop
 
 @section('content')
+    @if(Session::has('totalSuccess') && Session::get('totalSuccess') > 0)
+        <div class="alert alert-success fade in alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {{ Session::get('totalSuccess') }} records import successfully.
+        </div>
+    @endif
+    @if(Session::has('dataErrors') && count(Session::get('dataErrors')) > 0)
+        <div class="alert alert-error fade in alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            @foreach (Session::get('dataErrors') as $error)
+                <ul>
+                    <li>{{ $error }} import was not successful.</li>
+                </ul>
+            @endforeach
+        </div>
+    @endif
+    @if(Session::has('formatErrors') && count(Session::get('formatErrors')) > 0)
+        <div class="alert alert-error fade in alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            @foreach (Session::get('formatErrors') as $msg_error)
+                <ul>
+                    <li>{{ $msg_error }}</li>
+                </ul>
+            @endforeach
+        </div>
+    @endif
     <div class="row">
         <div class="col-xs-12">
             <div style="width:200px;float: left;">
@@ -31,6 +57,7 @@
                         <i class="fa fa-pencil"></i> {{ trans('pemedic::patients.button.create patient') }}
                     </a>
                     <a href="{{ route('admin.patient.export.index') }}" class="btn btn-primary btn-flat" style="padding: 4px 10px; margin-left:2px;">{{ trans('pemedic::patients.button.exportCsv') }}</a>
+                    <a href="#" class="btn btn-primary btn-flat" data-toggle="modal" data-target="#modal-import" style="padding: 4px 10px; margin-left:2px;">{{ trans('pemedic::patients.button.import') }}</a>
                 </div>
             </div>
             <div class="box box-primary">
@@ -91,7 +118,7 @@
                 </div>
                 <!-- /.box -->
                 <div class="box-footer">
-                    {!! Form::open(['route' => ['admin.doctor.doctor.bulkdelete'], 'method' => 'post']) !!}
+                    {!! Form::open(['route' => ['admin.patient.patient.bulkdelete'], 'method' => 'post']) !!}
                         <input type="hidden" id="patient-hidden" name="users" value="">
                         <button class="btn btn-danger pull-left btn-flat"> {{ trans('pemedic::patients.button.bulk delete') }}</button>
                     {!! Form::close() !!}
@@ -100,6 +127,33 @@
         </div>
     </div>
     @include('core::partials.delete-modal')
+    <!-- Modal import patient -->
+    <div class="modal fade" id="modal-import">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+            {!! Form::open(['route' => ['admin.patient.import.store'], 'method' => 'post', 'enctype' => 'multipart/form-data']) !!}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">{{ trans('pemedic::patients.title.import patient') }}</h4>
+                </div>
+                <div class="form-group col-sm-12">
+                    <label>{{ trans('pemedic::patients.form.select file') }}</label>
+                    <input type="file" name="file">
+                </div>
+                <div class="form-group col-sm-12">
+                    <p>
+                        <a href="/assets/template_import_patient.csv">Click Here</a> to download a sample CSV file.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary btn-flat pull-left">Create</button>
+                </div>
+            </div>
+            {!! Form::close() !!}
+        </div>
+    </div>
 @stop
 
 @section('footer')

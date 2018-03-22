@@ -39,7 +39,7 @@ trait PemedicResponse {
      */
     public function respondNotFound($message = 'Not Found')
     {
-        return $this->setStatusCode(Response::HTTP_NOT_FOUND)->respondWithError($message);
+        return $this->setStatusCode(Response::HTTP_NOT_FOUND)->respondWithError($message, 404);
     }
 
     /**
@@ -49,7 +49,7 @@ trait PemedicResponse {
      */
     public function respondBadRequest($message = 'Bad Request')
     {
-        return $this->setStatusCode(Response::HTTP_BAD_REQUEST)->respondWithError($message);
+        return $this->setStatusCode(Response::HTTP_BAD_REQUEST)->respondWithError($message, 400);
     }
 
     /**
@@ -59,7 +59,7 @@ trait PemedicResponse {
      */
     public function respondServerError($message = 'Server Error')
     {
-        return $this->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR)->respondWithError($message);
+        return $this->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR)->respondWithError($message, 500);
     }
 
     /**
@@ -89,7 +89,7 @@ trait PemedicResponse {
      */
     public function respondUnauthorized($message = 'Unauthorized')
     {
-        return $this->setStatusCode(Response::HTTP_UNAUTHORIZED)->respondWithError($message);
+        return $this->setStatusCode(Response::HTTP_UNAUTHORIZED)->respondWithError($message, 401);
     }
 
     /**
@@ -99,7 +99,7 @@ trait PemedicResponse {
      */
     public function respondForbidden($message = 'Forbidden')
     {
-        return $this->setStatusCode(Response::HTTP_FORBIDDEN)->respondWithError($message);
+        return $this->setStatusCode(Response::HTTP_FORBIDDEN)->respondWithError($message, 403);
     }
 
     /**
@@ -137,13 +137,13 @@ trait PemedicResponse {
      */
     public function respondWithSuccess($data, $message = '', $headers = [])
     {
-        // return $this->respond([
-        //     'status'=> false,
-        //     "status_code"=> 500,
-        //     "message"=> $message,
-        //     "data"=>[]
-        // ]);
-        return response()->json([ 'message' => $message, 'data' => $data], $this->getStatusCode(), $headers);
+        return $this->respond([
+            'status' => true,
+            'status_code' => Response::HTTP_OK,
+            "message"=> $message,
+            "data"=>$data
+        ]);
+        // return response()->json([ 'message' => $message, 'data' => $data], $this->getStatusCode(), $headers);
     }
 
     /**
@@ -151,14 +151,15 @@ trait PemedicResponse {
      *
      * @return mixed
      */
-    public function respondWithMessage($message, $headers = [])
+    public function respondWithMessage($message, $status_code = '', $headers = [])
     {
-        // return $this->respond([
-        //     'status'=> false,
-        //     "status_code"=> 500,
-        //     "message"=> $message,
-        //     "data"=>[]
-        // ]);
+        $status_code = $status_code ? $status_code : Response::HTTP_OK;
+        return $this->respond([
+            'status'=> true,
+            "status_code"=> $status_code,
+            "message"=> $message,
+            "data"=>[]
+        ]);
         return response()->json([ 'message' => $message], $this->getStatusCode(), $headers);
     }
 
@@ -167,17 +168,17 @@ trait PemedicResponse {
      *
      * @return mixed
      */
-    public function respondWithError($message)
+    public function respondWithError($message, $status_code = 500)
     {
-        // return $this->respond([
-        //     'status'=> false,
-        //     "status_code"=> 500,
-        //     "message"=> $message,
-        //     "data"=>[]
-        // ]);
         return $this->respond([
-                'message' => $message,
-            ]);
+            'status'=> false,
+            "status_code"=> $status_code,
+            "message"=> $message,
+            "data"=>[]
+        ]);
+        // return $this->respond([
+        //         'message' => $message,
+        //     ]);
     }
 
     /**
@@ -194,8 +195,8 @@ trait PemedicResponse {
         ];
 
         return $this->respond([
-            // 'status' => true,
-            // 'status_code' => Response::HTTP_OK,
+            'status' => true,
+            'status_code' => Response::HTTP_OK,
             'message' => $message,
             'data' => $data,
             'paginator' => $paginator

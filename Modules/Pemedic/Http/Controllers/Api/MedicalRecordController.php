@@ -16,6 +16,7 @@ use Modules\Pemedic\Http\Transformer\UserTransformer;
 use Modules\Pemedic\Http\Transformer\MedicalRecordTransformer;
 use Modules\Pemedic\Repositories\MedicalRecordRepository;
 use Modules\Pemedic\Entities\MedicalRecordFile;
+use Modules\Pemedic\Http\Requests\Api\Medical\DeleteMedicalRecordRequest;
 
 class MedicalRecordController extends ApiBaseController
 {
@@ -45,6 +46,22 @@ class MedicalRecordController extends ApiBaseController
      *   operationId="api.medical.getListMedicalRecord",
      *   produces={"application/json"},
      *   tags={"MedicalRecord"},
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="path",
+     *     name="take",
+     *     required=false,
+     *     type="integer",
+     *     default="10" 
+     *   ),
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="path",
+     *     name="page",
+     *     required=false,
+     *     type="integer",
+     *     default="1" 
+     *   ),
      *   @SWG\Response(response=401, description="unauthorized"),
      *   @SWG\Response(response=200, description="Success"),
      *   security={
@@ -140,6 +157,191 @@ class MedicalRecordController extends ApiBaseController
 
 
     }
+
+    /**
+     * @SWG\Get(
+     *   path="/medical/getDetailMedicalRecord?id={id}",
+     *   summary="View",
+     *   operationId="api.v1.medical.getDetailMedicalRecord",
+     *   produces={"application/json"},
+     *   tags={"MedicalRecord"},
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="path",
+     *     name="id",
+     *     required=true,
+     *     type="integer",
+     *     default="" 
+     *   ),
+     *   @SWG\Response(response=401, description="unauthorized"),
+     *   @SWG\Response(response=200, description="Success"),
+     *   security={
+     *       {"api_key": {}}
+     *   }
+     * )
+     *
+     */
+    public function getDetailMedicalRecord(Request $request, MedicalRecordTransformer $transformer)
+    {
+        $patient = Auth::guard('api')->user();
+        $id = $request->id ? $request->id : false;
+
+        $item = $this->service->findMedicalRecord($id, $patient);
+
+        if(!count($item)){
+            return $this->respondNotFound('Item not found');
+        }
+
+        return $this->respondWithSuccess($transformer->transform($item));
+
+    }
+    
+    /**
+     * @SWG\Post(
+     *   path="/medical/updateMedicalRecord",
+     *   summary="View",
+     *   operationId="api.v1.medical.updateMedicalRecord",
+     *   produces={"application/json"},
+     *   tags={"MedicalRecord"},
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="formData",
+     *     name="date",
+     *     required=false,
+     *     type="string",
+     *     default="" 
+     *   ),
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="formData",
+     *     name="doctor_name",
+     *     required=false,
+     *     type="string",
+     *     default="" 
+     *   ),
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="formData",
+     *     name="clinic_name",
+     *     required=false,
+     *     type="string",
+     *     default="" 
+     *   ),
+     *   @SWG\Parameter(
+     *     name="file[]",
+     *     in="formData",
+     *     description="avatar's profile",
+     *     required=false,
+     *     type= "file",
+     *   ),
+     *   @SWG\Response(response=401, description="unauthorized"),
+     *   @SWG\Response(response=200, description="Success"),
+     *   security={
+     *       {"api_key": {}}
+     *   }
+     * )
+     *
+     */
+    public function updateMedicalRecord(UpdateMedicalRecordRequest $request)
+    {
+        $patient = Auth::guard('api')->user();
+        $id = $request->id ? $request->id : false;
+
+        $item = $this->service->findMedicalRecord($id, $patient);
+
+        if(!count($item)){
+            return $this->respondNotFound('Item not found');
+        }
+
+        // update item
+        $this->service->deleteMedicalRecord($id);
+
+        return $this->respondWithMessage('Deleted successfully');
+
+    }
+
+    /**
+     * @SWG\Post(
+     *   path="/medical/deleteMedicalRecord",
+     *   summary="View",
+     *   operationId="api.v1.medical.deleteMedicalRecord",
+     *   produces={"application/json"},
+     *   tags={"MedicalRecord"},
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="formData",
+     *     name="id",
+     *     required=true,
+     *     type="string",
+     *     default="" 
+     *   ),
+     *   @SWG\Response(response=401, description="unauthorized"),
+     *   @SWG\Response(response=200, description="Success"),
+     *   security={
+     *       {"api_key": {}}
+     *   }
+     * )
+     *
+     */
+    public function deleteMedicalRecord(DeleteMedicalRecordRequest $request)
+    {
+        $patient = Auth::guard('api')->user();
+        $id = $request->id ? $request->id : false;
+
+        $item = $this->service->findMedicalRecord($id, $patient);
+
+        if(!count($item)){
+            return $this->respondNotFound('Item not found');
+        }
+
+        // delete item
+        $this->service->deleteMedicalRecord($id);
+
+        return $this->respondWithMessage('Deleted successfully');
+
+    }
+
+    /**
+     * @SWG\Post(
+     *   path="/medical/deleteMedicalRecordFile",
+     *   summary="View",
+     *   operationId="api.v1.medical.deleteMedicalRecordFile",
+     *   produces={"application/json"},
+     *   tags={"MedicalRecord"},
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="formData",
+     *     name="id",
+     *     required=true,
+     *     type="string",
+     *     default="" 
+     *   ),
+     *   @SWG\Response(response=401, description="unauthorized"),
+     *   @SWG\Response(response=200, description="Success"),
+     *   security={
+     *       {"api_key": {}}
+     *   }
+     * )
+     *
+     */
+    public function deleteMedicalRecordFile(DeleteMedicalRecordRequest $request)
+    {
+        $patient = Auth::guard('api')->user();
+        $id = $request->id ? $request->id : false;
+
+        $item = $this->service->findMedicalRecord($id, $patient);
+
+        if(!count($item)){
+            return $this->respondNotFound('Item not found');
+        }
+
+        // delete item
+        $this->service->deleteMedicalRecord($id);
+
+        return $this->respondWithMessage('Deleted successfully');
+
+    }
+
     public function addMedicalRecordFile($medicalRecord,$patient_id,$path)
     {
     	$medicalRecordFile = new MedicalRecordFile();

@@ -129,6 +129,8 @@ class MedicalService {
     public function update(MedicalRecord $medical,$data = array(),$request)
     {
         $data['date'] = !empty($data['date'])?date('Y-m-d', strtotime($data['date'])):date("Y-m-d");
+        $data['clinic_id'] = !empty($data['clinic_id'])?$data['clinic_id']:null;
+        $data['doctor_id'] = !empty($data['doctor_id'])?$data['doctor_id']:null;
         $this->medicalRecordRepository->update($medical,$data);
         if(!empty($data['file']))
         {
@@ -230,4 +232,35 @@ class MedicalService {
         return $paginate;
     }
 
+    /**
+     * Author: Dung Vo
+     * [findVoucherPatient find medical record of patient user]
+     * @param  number $id   [id of voucher]
+     * @param  object $user [item patient user]
+     * @return array        [items medical record of patient user]
+     */
+    public function findMedicalRecord($id, $user){
+        return $this->medicalRecordRepository->findByAttributes(['id' => $id, 'patient_id' => $user->id]);
+    }
+    
+    /**
+     * Author: Dung Vo
+     * [deleteMedicalRecord delete medical record]
+     * @param  number $id [id medical record]
+     * @return boolean    [true]
+     */
+    public function deleteMedicalRecord($id){
+        $item =  $this->medicalRecordRepository->find($id);
+
+        if(count($item)){
+            $item->is_patient_deleted = 1;
+            $item->save();
+            if($item->is_clinic_deleted){
+                $item->delete();
+            }
+            return true;
+        }
+
+        return false;
+    }
 }

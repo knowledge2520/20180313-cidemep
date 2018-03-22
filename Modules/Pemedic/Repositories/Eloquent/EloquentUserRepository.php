@@ -92,12 +92,9 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
     }
     
     /**
-        Author : NhatML
-        Todo : do something such generate the password
-        Param : - param1 
-                - param2
-        Return : explain data return
-    **/
+     * [pushDoctorCriteria filter repository]
+     * @return object [model]
+     */
     public function pushDoctorCriteria(){
         $model = $this->model->with('roles')->with('profile')->whereHas('roles',function($query){
             $query->where('roles.id',4);
@@ -108,12 +105,13 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
     }
 
     /**
-        Author : NhatML
-        Todo : do something such generate the password
-        Param : - param1 
-                - param2
-        Return : explain data return
-    **/
+     * [getListDoctor get list items]
+     * @param  string  $option  [list: return list items using pagination; count: return number of list items]
+     * @param  string  $keyword [keyword]
+     * @param  boolean $page    [page]
+     * @param  boolean $limit   [items per page]
+     * @return [mixed]          [list: array, count: integer]
+     */
     public function getListDoctor($option = "list", $keyword = "", $page = false, $limit = false){
         $offset = ($page - 1) * $limit;
         if($option == "list"){
@@ -140,7 +138,7 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
             }
 
         }else{
-            $result = $this->pushCriteria()
+            $result = $this->pushDoctorCriteria()
                             ->whereHas('profile', function($query) use ($keyword){
                                 $query->where('full_name', 'LIKE', '%'.$keyword.'%');
                             })
@@ -150,12 +148,11 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
     }
     
     /**
-        Author : NhatML
-        Todo : do something such generate the password
-        Param : - param1 
-                - param2
-        Return : explain data return
-    **/
+     * Author: Dung Vo
+     * [getAll get all items]
+     * @param  string $keyword  [keyword]
+     * @return [array]          [list items]
+     */
     public function getAllDoctor($keyword = ""){
         if($keyword){
             return $this->pushDoctorCriteria()
@@ -168,14 +165,94 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
     }
 
     /**
-        Author : NhatMLs
-        Todo : do something such generate the password
-        Param : - param1 
-                - param2
-        Return : explain data return
-    **/
+     * [findDoctor find doctor]
+     * @param  number $id [id doctor]
+     * @return object     [item doctor]
+     */
     public function findDoctor($id){
         return $this->pushDoctorCriteria()->find($id);
+    }
+
+    /**
+     * [pushClinicCriteria filter repository]
+     * @return object [model]
+     */
+    public function pushClinicCriteria(){
+        $model = $this->model->with('roles')->with('profile')->whereHas('roles',function($query){
+            $query->where('roles.id',3);
+        });
+        
+        $model->where('users.status', 1);
+        return $model;
+    }
+
+    /**
+     * [getListDoctor get list items]
+     * @param  string  $option  [list: return list items using pagination; count: return number of list items]
+     * @param  string  $keyword [keyword]
+     * @param  boolean $page    [page]
+     * @param  boolean $limit   [items per page]
+     * @return [mixed]          [list: array, count: integer]
+     */
+    public function getListClinic($option = "list", $keyword = "", $page = false, $limit = false){
+        $offset = ($page - 1) * $limit;
+        if($option == "list"){
+            $result = [];
+            $data = false;
+            $query = "SELECT u.*
+                        FROM users u 
+                        JOIN pemedic__clinic_profiles p ON p.user_id = u.id 
+                        JOIN role_users ul ON ul.user_id = u.id AND ul.role_id = 4 ";
+            if($keyword){
+                $query.= " WHERE p.clinic_namec LIKE '%$keyword%'";
+            }
+
+            $query.= "ORDER BY p.clinic_namec ASC 
+                        LIMIT $limit
+                        OFFSET $offset";
+
+            $data = \DB::select($query);
+
+            if($data){
+                foreach ($data as $item) {
+                    $result[] = $this->model->find($item->id);
+                }
+            }
+
+        }else{
+            $result = $this->pushClinicCriteria()
+                            ->whereHas('clinicProfile', function($query) use ($keyword){
+                                $query->where('clinic_namec', 'LIKE', '%'.$keyword.'%');
+                            })
+                            ->count();
+        }
+        return $result;
+    }
+    
+    /**
+     * Author: Dung Vo
+     * [getAll get all items]
+     * @param  string $keyword  [keyword]
+     * @return [array]          [list items]
+     */
+    public function getAllClinic($keyword = ""){
+        if($keyword){
+            return $this->pushClinicCriteria()
+                        ->whereHas('clinicProfile', function($query) use ($keyword){
+                            $query->where('clinic_namec', 'LIKE', '%'.$keyword.'%');
+                        })
+                        ->get();
+        }
+        return $this->pushClinicCriteria()->get();
+    }
+
+    /**
+     * [findClinic find Clinic]
+     * @param  number $id [id Clinic]
+     * @return object     [item Clinic]
+     */
+    public function findClinic($id){
+        return $this->pushClinicCriteria()->find($id);
     }
 
     public function destroy($model){

@@ -11,7 +11,7 @@
 @stop
 
 @section('content')
-     @if(Session::has('patient_error') && count(Session::get('patient_error')) > 0)
+    @if(Session::has('patient_error') && count(Session::get('patient_error')) > 0)
         <div class="alert alert-error fade in alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
             @foreach (Session::get('patient_error') as $error)
@@ -45,6 +45,7 @@
                                 <th>{{ trans('pemedic::medicals.table.email') }}</th>
                                 <th>{{ trans('pemedic::medicals.table.doctor') }}</th>
                                 <th>{{ trans('pemedic::medicals.table.date') }}</th>
+                                <th>{{ trans('pemedic::medicals.table.status') }}</th>
                                 <th data-sortable="false" style="min-width: 75px">{{ trans('core::core.table.actions') }}</th>
                             </tr>
                             </thead>
@@ -62,6 +63,13 @@
                                     @endif
                                 </td>
                                 <td>{{ $medical->date }}</td>
+                                <td>
+                                    @if(empty($medical->clinic_id))
+                                        <span class="label label-primary">{{ trans('pemedic::medicals.table.create local') }}</span>
+                                    @else
+                                        <span class="label label-success">{{ trans('pemedic::medicals.table.create clinic') }}</span>
+                                    @endif
+                                </td>
                                 <td>
                                     <div class="btn-group">
                                         <a href="{{ route('admin.medical.medical.edit', [$medical->id]) }}" class="btn btn-default btn-flat"><i class="fa fa-pencil"></i></a>

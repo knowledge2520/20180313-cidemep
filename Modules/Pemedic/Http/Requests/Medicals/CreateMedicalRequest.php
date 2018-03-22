@@ -9,7 +9,8 @@ class CreateMedicalRequest extends BaseFormRequest
     public function rules()
     {
         return [
-            // 'patient_id' => 'required',
+            'patient_id' => 'required',
+            'clinic_id' => 'required',
             // 'date' => 'required',
         ];
     }

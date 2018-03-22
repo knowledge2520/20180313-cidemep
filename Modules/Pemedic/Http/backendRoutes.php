@@ -17,7 +17,7 @@ $router->group(['prefix' =>'/pemedic'], function (Router $router) {
         'uses' => 'PemedicController@create',
         'middleware' => 'can:pemedic.pemedics.create'
     ]);
-    $router->post('pemedics', [
+    $router->post('pemedics/store', [
         'as' => 'admin.pemedic.pemedic.store',
         'uses' => 'PemedicController@store',
         'middleware' => 'can:pemedic.pemedics.create'
@@ -118,6 +118,11 @@ $router->group(['prefix' =>'/pemedic'], function (Router $router) {
     $router->get('patients/export', [
         'as' => 'admin.patient.export.index',
         'uses' => 'PatientController@exportCsv',
+        'middleware' => 'can:patient.patients.index'
+    ]);
+    $router->post('patients/import', [
+        'as' => 'admin.patient.import.store',
+        'uses' => 'PatientController@import',
         'middleware' => 'can:patient.patients.index'
     ]);
     $router->get('patients/delete-image', [

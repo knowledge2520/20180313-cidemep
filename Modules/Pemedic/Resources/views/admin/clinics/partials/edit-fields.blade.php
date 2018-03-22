@@ -1,6 +1,6 @@
 <div class="box-body">
     <div class=" form-group col-sm-12 {{ $errors->has('email') ? ' has-error' : '' }}">
-        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::clinics.table.email')}}</label>
+        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::clinics.table.email')}} <span class="text-danger"> (*) </span></label>
         <div class="col-sm-12 col-xs-12 ">
             <input type="text" class="form-control" name="email" value="{{ $clinic->user->email }}">
         </div>
@@ -10,7 +10,7 @@
     </div>
 
     <div class=" form-group col-sm-12 {{ $errors->has('clinic_name') ? ' has-error' : '' }}">
-        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::clinics.table.name')}}</label>
+        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::clinics.table.name')}} <span class="text-danger"> (*) </span></label>
         <div class="col-sm-12 col-xs-12 ">
             <input type="text" class="form-control" name="clinic_name" value="{{ $clinic->clinic_name }}">
         </div>
@@ -20,7 +20,7 @@
     </div>
 
     <div class=" form-group col-sm-12 {{ $errors->has('phone') ? ' has-error' : '' }}">
-        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::clinics.table.phone')}}</label>
+        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::clinics.table.phone')}} <span class="text-danger"> (*) </span></label>
         <div class="col-sm-12 col-xs-12 ">
             <input type="text" class="form-control" name="phone" value="{{ $clinic->phone }}" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
         </div>
@@ -30,7 +30,7 @@
     </div>
 
     <div class=" form-group col-sm-12 {{ $errors->has('vip_phone') ? ' has-error' : '' }}">
-        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::clinics.table.vip phone')}}</label>
+        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::clinics.table.vip phone')}} <span class="text-danger"> (*) </span></label>
         <div class="col-sm-12 col-xs-12 ">
             <input type="text" class="form-control" name="vip_phone" value="{{ $clinic->vip_phone }}" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
         </div>
@@ -93,7 +93,7 @@
         <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::clinics.table.status')}}</label>
         <div class="col-sm-12 col-xs-12 ">
             <input type="radio" name="completed" value="0" {{ $clinic->user->isActivated()==false?"checked":"" }}> InActive<br>
-  			<input type="radio" name="completed" value="1" {{ $clinic->user->isActivated()==true?"checked":"" }}> Active
+            <input type="radio" name="completed" value="1" {{ $clinic->user->isActivated()==true?"checked":"" }}> Active
         </div>
         <div class="col-sm-12 col-xs-12 " >
             {!! $errors->first('status', '<span class="help-block">:message</span>') !!}

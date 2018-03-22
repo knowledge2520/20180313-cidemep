@@ -84,9 +84,17 @@ class PatientController extends AdminBaseController
         $validate_email = $this->userRepository->validateEmail(config('asgard.userprofile.config.roles.patient'),$request->email);
         if($validate_email)
         {
-            $this->userService->create($request->all(),config('asgard.userprofile.config.roles.patient'),$request);
-            return redirect()->route('admin.patient.patient.index')
-                ->withSuccess(trans('core::core.messages.resource created', ['name' => trans('pemedic::patients.title.patients')]));
+            $patient = $this->userService->create($request->all(),config('asgard.userprofile.config.roles.patient'),$request);
+            if(!empty($patient))
+            {
+                return redirect()->route('admin.patient.patient.index')
+                    ->withSuccess(trans('core::core.messages.resource created', ['name' => trans('pemedic::patients.title.patients')]));
+            }
+            else
+            {
+                return redirect()->route('admin.patient.patient.create')
+                    ->with(['email_error'=>"The email has already been taken."]);
+            }
         }
         else
         {
@@ -129,6 +137,13 @@ class PatientController extends AdminBaseController
      */
     public function destroy(User $patient)
     {
+        $patient->email = $patient->email . time();
+        $patient->save();
+
+        $user = $patient->profile;
+        $user->phone = $user->phone . time();
+        $user->save();
+        
         $this->userProfileRepository->destroy($patient->profile);
         $this->userRepository->destroy($patient);
         return redirect()->route('admin.patient.patient.index')
@@ -142,6 +157,19 @@ class PatientController extends AdminBaseController
     public function exportCsv()
     {
         $this->userService->exportCsv(config('asgard.userprofile.config.roles.patient'));
+    }
+
+    /**
+     * import patient.
+     *
+     * @param  Request $request
+     * @return index patient template
+     */
+    public function import(Request $request)
+    {
+        $patient = $this->userService->import($request);
+        return redirect()->route('admin.patient.patient.index')
+                ->with(['totalSuccess'=> $patient['totalSuccess'] ,'dataErrors' => $patient['dataErrors'],'formatErrors' => $patient['formatErrors']]);
     }
 
     /**

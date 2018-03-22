@@ -10,7 +10,7 @@ class UpdateMedicalRequest extends BaseFormRequest
     {
         return [
             'clinic_id' => 'required',
-            // 'patient_id' => 'required',
+            'patient_id' => 'required',
             // 'date' => 'required',
         ];
     }

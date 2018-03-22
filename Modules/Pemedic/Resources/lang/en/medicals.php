@@ -9,6 +9,7 @@ return [
         'medicals' => 'Medical records',
         'create medical' => 'Create a medical record',
         'edit medical' => 'Edit a medical record',
+        'view medical' => 'View a medical record local',
     ],
     'button' => [
         'create medical' => 'Create a medical record',
@@ -19,6 +20,7 @@ return [
         'email' => 'Email',
         'doctor' => 'Doctor',
         'date' => 'Date',
+        'status' => 'Status',
         'medical' => 'Medical Record',
         'preview' => 'Files preview',
         'clinic' => 'Clinic',
@@ -31,6 +33,8 @@ return [
         'patient' => 'Patient',
         'group' => 'Group',
         'type' => 'Patient/Group',
+        'create local' => 'Create by User',
+        'create clinic' => 'Create by Clinic',
     ],
     'form' => [
     ],

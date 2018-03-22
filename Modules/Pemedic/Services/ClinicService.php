@@ -100,7 +100,10 @@ class ClinicService {
     {
         $this->userRepository->update($clinic->user,$data);
         $activation =  $this->activationRepository->findByAttributes(['user_id'=>$clinic->user->id]);
-        $this->activationRepository->update($activation,$data);
+        if(!empty($activation))
+        {
+            $this->activationRepository->update($activation,$data);
+        }
         if(!empty($request->file('image')))
         {
             $file = $request->file('image');

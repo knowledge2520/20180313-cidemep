@@ -1,6 +1,6 @@
 <div class="box-body">
     <div class=" form-group col-sm-12 {{ $errors->has('type') ? ' has-error' : '' }}">
-        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::vouchers.table.clinic')}}</label>
+        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::vouchers.table.clinic')}} <span class="text-danger"> (*) </span></label>
         <div class="col-sm-12 col-xs-12 ">
             <select class="form-control" name="clinic_id">
                     @foreach($clinics as $clinic)
@@ -14,7 +14,7 @@
     </div>
 
     <div class=" form-group col-sm-12 {{ $errors->has('name') ? ' has-error' : '' }}">
-        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::vouchers.table.name')}}</label>
+        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::vouchers.table.name')}} <span class="text-danger"> (*) </span></label>
         <div class="col-sm-12 col-xs-12 ">
             <input type="text" class="form-control" name="name" value="{{ $voucher->name }}">
         </div>
@@ -24,7 +24,7 @@
     </div>
 
     <div class=" form-group col-sm-12 {{ $errors->has('start_date') ? ' has-error' : '' }}">
-        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::vouchers.table.start date')}}</label>
+        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::vouchers.table.start date')}} <span class="text-danger"> (*) </span></label>
         <div class="col-sm-12 col-xs-12 ">
             <input type="text" class="form-control" id="start_date" name="start_date" value="{{ date('m/d/Y',strtotime($voucher->start_date)) }}">
         </div>
@@ -34,7 +34,7 @@
     </div>
     
     <div class=" form-group col-sm-12 {{ $errors->has('expiry_date') ? ' has-error' : '' }}">
-        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::vouchers.table.end date')}}</label>
+        <label class="col-sm-12 col-xs-12 control-label ">{{trans('pemedic::vouchers.table.end date')}} <span class="text-danger"> (*) </span></label>
         <div class="col-sm-12 col-xs-12 ">
             <input type="text" class="form-control" id="expiry_date" name="expiry_date" value="{{ date('m/d/Y',strtotime($voucher->expiry_date)) }}">
         </div>
